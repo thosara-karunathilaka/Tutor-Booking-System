@@ -1,0 +1,3 @@
+U005,testtutor,Test Tutor,test@tutor.com,password,TUTOR,Math,5,25.0
+U007,dedunu,dedunu jayathilaka,dedunufiverr@gmail.com,123,TUTOR,N/A,0,0.0
+U008,teacher1,teacher teacher,teacher1@gmail.com,123,TUTOR,N/A,0,0.0

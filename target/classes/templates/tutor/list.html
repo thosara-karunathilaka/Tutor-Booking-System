@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Tutors List</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h2>Tutors List</h2>
+        <div>
+            <a th:if="${userRole == 'ADMIN'}" th:href="@{/tutor/add}" class="btn btn-primary">Add Tutor</a>
+            <a th:if="${userRole == 'ADMIN'}" th:href="@{/dashboard/admin}" class="btn btn-secondary">Back to Dashboard</a>
+            <a th:if="${userRole == 'STUDENT'}" th:href="@{/dashboard/student}" class="btn btn-secondary">Back to Dashboard</a>
+            <a th:if="${userRole == 'TUTOR'}" th:href="@{/dashboard/tutor}" class="btn btn-secondary">Back to Dashboard</a>
+        </div>
+    </div>
+    <div class="table-responsive">
+        <table class="table table-bordered table-striped">
+            <thead class="table-dark">
+                <tr>
+                    <th>User ID</th>
+                    <th>Name</th>
+                    <th>Username</th>
+                    <th>Email</th>
+                    <th>Specialization</th>
+                    <th>Experience (Years)</th>
+                    <th>Hourly Rate ($)</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="tutor : ${tutors}">
+                    <td th:text="${tutor.userId}"></td>
+                    <td th:text="${tutor.name}"></td>
+                    <td th:text="${tutor.username}"></td>
+                    <td th:text="${tutor.email}"></td>
+                    <td th:text="${tutor.specialization}"></td>
+                    <td th:text="${tutor.experienceYears}"></td>
+                    <td th:text="${tutor.hourlyRate}"></td>
+                </tr>
+                <tr th:if="${#lists.isEmpty(tutors)}">
+                    <td colspan="7" class="text-center">No tutors found.</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+</body>
+</html>
