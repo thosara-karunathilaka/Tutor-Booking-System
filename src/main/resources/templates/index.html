@@ -1,140 +1,31 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Tutor Booking System</title>
-
-    <style>
-
-        *{
-            margin:0;
-            padding:0;
-            box-sizing:border-box;
-            font-family:Arial, sans-serif;
-        }
-
-        body{
-            background:#f4f7fb;
-            color:#333;
-        }
-
-        /* Navbar */
-
-        .navbar{
-            display:flex;
-            justify-content:space-between;
-            align-items:center;
-            padding:20px 60px;
-            background:white;
-            box-shadow:0 2px 10px rgba(0,0,0,0.1);
-        }
-
-        .logo{
-            font-size:30px;
-            font-weight:bold;
-            color:#2c67f2;
-        }
-
-        .nav-buttons a{
-            text-decoration:none;
-            padding:10px 20px;
-            margin-left:10px;
-            border-radius:6px;
-            font-size:15px;
-            transition:0.3s;
-            display:inline-block;
-        }
-
-        .login-btn{
-            background:#e5ecff;
-            color:#2c67f2;
-        }
-
-        .signup-btn{
-            background:#2c67f2;
-            color:white;
-        }
-
-        .nav-buttons a:hover{
-            transform:scale(1.05);
-            opacity:0.9;
-        }
-
-        /* Hero Section */
-
-        .hero{
-            height:85vh;
-            display:flex;
-            justify-content:center;
-            align-items:center;
-            text-align:center;
-            padding:20px;
-        }
-
-        .hero-content h1{
-            font-size:55px;
-            margin-bottom:20px;
-            color:#1d3557;
-        }
-
-        .hero-content p{
-            font-size:20px;
-            color:#555;
-            margin-bottom:30px;
-        }
-
-        .hero-content a{
-            text-decoration:none;
-            background:#2c67f2;
-            color:white;
-            padding:15px 35px;
-            border-radius:8px;
-            font-size:18px;
-            transition:0.3s;
-            display:inline-block;
-        }
-
-        .hero-content a:hover{
-            background:#1f52cc;
-        }
-
-    </style>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
 </head>
-
 <body>
 
 <!-- Navbar -->
-
-<div class="navbar">
-
-    <div class="logo">
-        TutorBook
+<nav class="glass-nav">
+    <a href="/" class="logo gradient-text">TutorBook</a>
+    <div class="nav-links">
+        <a th:href="@{/login}" class="btn-glass">Login</a>
+        <a th:href="@{/register}" class="btn-premium">Sign Up</a>
     </div>
-
-    <div class="nav-buttons">
-        <a th:href="@{/login}" class="login-btn">Login</a>
-        <a th:href="@{/register}" class="signup-btn">Sign Up</a>
-    </div>
-
-</div>
+</nav>
 
 <!-- Hero Section -->
-
-<section class="hero">
-
-    <div class="hero-content">
-
-        <h1>Find the Best Tutors Online</h1>
-
-        <p>
-            Book professional tutors easily and improve your learning experience.
+<section style="min-height: 85vh; display: flex; justify-content: center; align-items: center; text-align: center; padding: 20px;">
+    <div class="glass-card" style="max-width: 800px; padding: 60px;">
+        <h1 style="font-size: 3.5rem; margin-bottom: 24px;">Find the <span class="gradient-text">Best Tutors</span> Online</h1>
+        <p style="font-size: 1.2rem; margin-bottom: 40px; color: var(--text-muted);">
+            Book professional tutors easily, master new subjects, and elevate your learning experience with our state-of-the-art platform.
         </p>
-
-        <a href="#">Book a Tutor</a>
-
+        <a th:href="@{/register}" class="btn-premium" style="font-size: 1.1rem; padding: 16px 32px;">Start Learning Today</a>
     </div>
-
 </section>
 
 </body>

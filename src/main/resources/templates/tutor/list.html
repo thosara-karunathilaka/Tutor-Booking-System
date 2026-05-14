@@ -2,29 +2,50 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <title>Tutors List</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <style>
+        .page-container {
+            padding: 40px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .header-actions {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+        }
+    </style>
 </head>
 <body>
-<div class="container mt-4">
-    <div class="d-flex justify-content-between align-items-center mb-3">
-        <h2>Tutors List</h2>
+<nav class="glass-nav">
+    <a href="/" class="logo gradient-text">TutorBook</a>
+    <div class="nav-links">
+        <a th:href="@{/logout}" class="btn-glass">Logout</a>
+    </div>
+</nav>
+
+<div class="page-container">
+    <div class="header-actions">
+        <h2><span class="gradient-text">Tutors Directory</span></h2>
         <div>
-            <a th:if="${userRole == 'ADMIN'}" th:href="@{/tutor/add}" class="btn btn-primary">Add Tutor</a>
-            <a th:if="${userRole == 'ADMIN'}" th:href="@{/dashboard/admin}" class="btn btn-secondary">Back to Dashboard</a>
-            <a th:if="${userRole == 'STUDENT'}" th:href="@{/dashboard/student}" class="btn btn-secondary">Back to Dashboard</a>
-            <a th:if="${userRole == 'TUTOR'}" th:href="@{/dashboard/tutor}" class="btn btn-secondary">Back to Dashboard</a>
+            <a th:if="${userRole == 'ADMIN'}" th:href="@{/tutor/add}" class="btn-premium">Add Tutor</a>
+            <a th:if="${userRole == 'ADMIN'}" th:href="@{/dashboard/admin}" class="btn-glass" style="margin-left: 10px;">Back</a>
+            <a th:if="${userRole == 'STUDENT'}" th:href="@{/dashboard/student}" class="btn-glass" style="margin-left: 10px;">Back</a>
+            <a th:if="${userRole == 'TUTOR'}" th:href="@{/dashboard/tutor}" class="btn-glass" style="margin-left: 10px;">Back</a>
         </div>
     </div>
-    <div class="table-responsive">
-        <table class="table table-bordered table-striped">
-            <thead class="table-dark">
+    
+    <div class="glass-card" style="padding: 0; overflow-x: auto;">
+        <table class="glass-table">
+            <thead>
                 <tr>
                     <th>User ID</th>
                     <th>Name</th>
                     <th>Username</th>
                     <th>Email</th>
                     <th>Specialization</th>
-                    <th>Experience (Years)</th>
+                    <th>Experience (Yrs)</th>
                     <th>Hourly Rate ($)</th>
                     <th th:if="${userRole == 'ADMIN'}">Actions</th>
                 </tr>
@@ -39,12 +60,12 @@
                     <td th:text="${tutor.experienceYears}"></td>
                     <td th:text="${tutor.hourlyRate}"></td>
                     <td th:if="${userRole == 'ADMIN'}">
-                        <a th:href="@{'/admin/tutor/edit/' + ${tutor.userId}}" class="btn btn-sm btn-warning">Edit</a>
-                        <a th:href="@{'/admin/tutor/delete/' + ${tutor.userId}}" class="btn btn-sm btn-danger" onclick="return confirm('Are you sure?')">Delete</a>
+                        <a th:href="@{'/admin/tutor/edit/' + ${tutor.userId}}" style="color: #fbbf24; text-decoration: none; margin-right: 10px;">Edit</a>
+                        <a th:href="@{'/admin/tutor/delete/' + ${tutor.userId}}" style="color: #ef4444; text-decoration: none;" onclick="return confirm('Are you sure?')">Delete</a>
                     </td>
                 </tr>
                 <tr th:if="${#lists.isEmpty(tutors)}">
-                    <td colspan="7" class="text-center">No tutors found.</td>
+                    <td colspan="8" style="text-align: center; padding: 30px;">No tutors found.</td>
                 </tr>
             </tbody>
         </table>

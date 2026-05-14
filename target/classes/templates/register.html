@@ -2,49 +2,65 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <title>Register - Tutor Booking System</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <style>
+        .auth-container {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        .auth-card {
+            width: 100%;
+            max-width: 500px;
+        }
+    </style>
 </head>
-<body class="bg-light">
-<div class="container mt-5">
-    <div class="row justify-content-center">
-        <div class="col-md-6">
-            <h2 class="text-center mb-4">Register</h2>
-            <div class="card shadow-sm">
-                <div class="card-body">
-                    <form th:action="@{/register}" th:object="${user}" method="post">
-                        <div class="mb-3">
-                            <label class="form-label">Username</label>
-                            <input type="text" th:field="*{username}" class="form-control" required>
-                        </div>
-                        <div class="mb-3">
-                            <label class="form-label">Full Name</label>
-                            <input type="text" th:field="*{name}" class="form-control" required>
-                        </div>
-                        <div class="mb-3">
-                            <label class="form-label">Email</label>
-                            <input type="email" th:field="*{email}" class="form-control" required>
-                        </div>
-                        <div class="mb-3">
-                            <label class="form-label">Password</label>
-                            <input type="password" th:field="*{password}" class="form-control" required>
-                        </div>
-                        <div class="mb-3">
-                            <label class="form-label">Role</label>
-                            <select th:field="*{role}" class="form-select">
-                                <option value="STUDENT">Student</option>
-                                <option value="TUTOR">Tutor</option>
-                                <option value="ADMIN">Admin</option>
-                            </select>
-                        </div>
-                        <button type="submit" class="btn btn-success w-100">Register</button>
-                    </form>
-                    <div class="mt-3 text-center">
-                        <a th:href="@{/login}">Already have an account? Login here</a>
-                    </div>
-                </div>
+<body>
+
+<nav class="glass-nav">
+    <a href="/" class="logo gradient-text">TutorBook</a>
+    <div class="nav-links">
+        <a th:href="@{/login}" class="btn-glass">Login</a>
+    </div>
+</nav>
+
+<div class="auth-container">
+    <div class="glass-card auth-card">
+        <h2 style="text-align: center; margin-bottom: 30px;">Create an Account</h2>
+        <form th:action="@{/register}" th:object="${user}" method="post">
+            <div style="margin-bottom: 20px;">
+                <label class="form-label">Username</label>
+                <input type="text" th:field="*{username}" class="form-control-glass" required>
             </div>
+            <div style="margin-bottom: 20px;">
+                <label class="form-label">Full Name</label>
+                <input type="text" th:field="*{name}" class="form-control-glass" required>
+            </div>
+            <div style="margin-bottom: 20px;">
+                <label class="form-label">Email</label>
+                <input type="email" th:field="*{email}" class="form-control-glass" required>
+            </div>
+            <div style="margin-bottom: 20px;">
+                <label class="form-label">Password</label>
+                <input type="password" th:field="*{password}" class="form-control-glass" required>
+            </div>
+            <div style="margin-bottom: 24px;">
+                <label class="form-label">Role</label>
+                <select th:field="*{role}" class="form-control-glass" style="background-color: var(--bg-dark); cursor: pointer;">
+                    <option value="STUDENT">Student</option>
+                    <option value="TUTOR">Tutor</option>
+                    <option value="ADMIN">Admin</option>
+                </select>
+            </div>
+            <button type="submit" class="btn-premium" style="width: 100%;">Register</button>
+        </form>
+        <div style="margin-top: 24px; text-align: center;">
+            <a th:href="@{/login}" style="color: var(--text-muted); text-decoration: none; font-size: 0.9rem;">Already have an account? <span style="color: var(--accent-blue);">Login here</span></a>
         </div>
     </div>
 </div>
+
 </body>
 </html>

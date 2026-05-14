@@ -2,46 +2,59 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <title>Student Dashboard</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <style>
+        .dashboard-container {
+            padding: 40px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 24px;
+            margin-top: 30px;
+        }
+    </style>
 </head>
 <body>
-<nav class="navbar navbar-dark bg-success">
-    <div class="container">
-        <a class="navbar-brand" href="#">TBS Student Dashboard</a>
-        <a class="btn btn-outline-light" th:href="@{/logout}">Logout</a>
+
+<nav class="glass-nav">
+    <a href="#" class="logo gradient-text">TBS Student</a>
+    <div class="nav-links">
+        <a th:href="@{/logout}" class="btn-glass">Logout</a>
     </div>
 </nav>
-<div class="container mt-4">
-    <h2>Welcome, Student!</h2>
-    <div class="row mt-4">
-        <div class="col-md-4">
-            <div class="card shadow-sm">
-                <div class="card-body">
-                    <h5 class="card-title">Browse Courses</h5>
-                    <p class="card-text">Find and enroll in available tutoring courses.</p>
-                    <a th:href="@{/student/courses}" class="btn btn-success">View Courses</a>
-                </div>
+
+<div class="dashboard-container">
+    <h2>Welcome, <span class="gradient-text">Student!</span></h2>
+    
+    <div class="dashboard-grid">
+        <div class="glass-card">
+            <h3 style="color: var(--accent-blue);">Browse Courses</h3>
+            <p>Find and enroll in available tutoring courses.</p>
+            <div style="margin-top: 20px;">
+                <a th:href="@{/student/courses}" class="btn-premium">View Courses</a>
             </div>
         </div>
-        <div class="col-md-4">
-            <div class="card shadow-sm">
-                <div class="card-body">
-                    <h5 class="card-title">Tutor Directory</h5>
-                    <p class="card-text">View all available tutors.</p>
-                    <a th:href="@{/tutor/list}" class="btn btn-primary">Browse Tutors</a>
-                </div>
+        
+        <div class="glass-card">
+            <h3 style="color: var(--accent-purple);">Tutor Directory</h3>
+            <p>View all available tutors.</p>
+            <div style="margin-top: 20px;">
+                <a th:href="@{/tutor/list}" class="btn-premium">Browse Tutors</a>
             </div>
         </div>
-        <div class="col-md-4">
-            <div class="card shadow-sm">
-                <div class="card-body">
-                    <h5 class="card-title">My Profile</h5>
-                    <p class="card-text">Update your personal profile details.</p>
-                    <a th:href="@{/student/profile}" class="btn btn-info text-white">Edit Profile</a>
-                </div>
+        
+        <div class="glass-card">
+            <h3 style="color: var(--text-main);">My Profile</h3>
+            <p>Update your personal profile details.</p>
+            <div style="margin-top: 20px;">
+                <a th:href="@{/student/profile}" class="btn-glass">Edit Profile</a>
             </div>
         </div>
     </div>
 </div>
+
 </body>
 </html>
