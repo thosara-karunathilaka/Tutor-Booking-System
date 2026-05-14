@@ -29,6 +29,8 @@ public class AuthController {
         if (user != null) {
             String role = user.getRole();
             session.setAttribute("role", role);
+            session.setAttribute("userId", user.getUserId());
+            session.setAttribute("user", user);
             if ("ADMIN".equalsIgnoreCase(role)) return "redirect:/dashboard/admin";
             if ("TUTOR".equalsIgnoreCase(role)) return "redirect:/dashboard/tutor";
             if ("STUDENT".equalsIgnoreCase(role)) return "redirect:/dashboard/student";

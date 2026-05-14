@@ -18,4 +18,18 @@ public class StudentService {
         FileHandler.saveUser(student);
         FileHandler.saveStudent(student);
     }
+
+    public Student getStudentById(String id) {
+        return getAllStudents().stream().filter(s -> s.getUserId().equals(id)).findFirst().orElse(null);
+    }
+
+    public void updateStudent(Student student) {
+        FileHandler.updateUser(student);
+        FileHandler.updateStudent(student);
+    }
+
+    public void deleteStudent(String id) {
+        FileHandler.deleteUser(id);
+        FileHandler.deleteStudent(id);
+    }
 }

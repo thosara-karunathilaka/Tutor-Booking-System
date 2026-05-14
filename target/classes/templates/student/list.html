@@ -24,6 +24,7 @@
                     <th>Grade Level</th>
                     <th>Address</th>
                     <th>Phone Number</th>
+                    <th th:if="${session.role == 'ADMIN'}">Actions</th>
                 </tr>
             </thead>
             <tbody>
@@ -35,6 +36,10 @@
                     <td th:text="${student.gradeLevel}"></td>
                     <td th:text="${student.address}"></td>
                     <td th:text="${student.phoneNumber}"></td>
+                    <td th:if="${session.role == 'ADMIN'}">
+                        <a th:href="@{'/admin/student/edit/' + ${student.userId}}" class="btn btn-sm btn-warning">Edit</a>
+                        <a th:href="@{'/admin/student/delete/' + ${student.userId}}" class="btn btn-sm btn-danger" onclick="return confirm('Are you sure?')">Delete</a>
+                    </td>
                 </tr>
                 <tr th:if="${#lists.isEmpty(students)}">
                     <td colspan="7" class="text-center">No students found.</td>

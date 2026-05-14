@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Add Course</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+<div class="container mt-4">
+    <h2>Add New Course</h2>
+    <form th:action="@{/tutor/course/add}" th:object="${course}" method="post">
+        <div class="mb-3">
+            <label>Title</label>
+            <input type="text" class="form-control" th:field="*{title}" required>
+        </div>
+        <div class="mb-3">
+            <label>Description</label>
+            <textarea class="form-control" th:field="*{description}" required></textarea>
+        </div>
+        <div class="mb-3">
+            <label>Price ($)</label>
+            <input type="number" step="0.01" class="form-control" th:field="*{price}" required>
+        </div>
+        <button type="submit" class="btn btn-primary">Save Course</button>
+        <a th:href="@{/tutor/courses}" class="btn btn-secondary">Cancel</a>
+    </form>
+</div>
+</body>
+</html>

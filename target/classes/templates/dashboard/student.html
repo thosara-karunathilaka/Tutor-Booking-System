@@ -13,8 +13,35 @@
 </nav>
 <div class="container mt-4">
     <h2>Welcome, Student!</h2>
-    <p>This is your dashboard. Soon you will be able to book tutors here.</p>
-    <a th:href="@{/tutor/list}" class="btn btn-primary mt-3">Browse Available Tutors</a>
+    <div class="row mt-4">
+        <div class="col-md-4">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title">Browse Courses</h5>
+                    <p class="card-text">Find and enroll in available tutoring courses.</p>
+                    <a th:href="@{/student/courses}" class="btn btn-success">View Courses</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title">Tutor Directory</h5>
+                    <p class="card-text">View all available tutors.</p>
+                    <a th:href="@{/tutor/list}" class="btn btn-primary">Browse Tutors</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title">My Profile</h5>
+                    <p class="card-text">Update your personal profile details.</p>
+                    <a th:href="@{/student/profile}" class="btn btn-info text-white">Edit Profile</a>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 </body>
 </html>

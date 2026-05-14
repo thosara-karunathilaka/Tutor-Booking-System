@@ -18,4 +18,18 @@ public class TutorService {
         FileHandler.saveUser(tutor);
         FileHandler.saveTutor(tutor);
     }
+
+    public Tutor getTutorById(String id) {
+        return getAllTutors().stream().filter(t -> t.getUserId().equals(id)).findFirst().orElse(null);
+    }
+
+    public void updateTutor(Tutor tutor) {
+        FileHandler.updateUser(tutor);
+        FileHandler.updateTutor(tutor);
+    }
+
+    public void deleteTutor(String id) {
+        FileHandler.deleteUser(id);
+        FileHandler.deleteTutor(id);
+    }
 }

@@ -14,6 +14,8 @@ public class FileHandler {
     private static final String STUDENT_FILE = "data/students.txt";
     private static final String TUTOR_FILE = "data/tutors.txt";
     private static final String ADMIN_FILE = "data/admin.txt";
+    private static final String COURSE_FILE = "data/courses.txt";
+    private static final String ENROLLMENT_FILE = "data/enrollments.txt";
     private static final Pattern USER_ID_PATTERN = Pattern.compile("^U(\\d+)$");
 
     static {
@@ -21,6 +23,8 @@ public class FileHandler {
         createFileIfNotExists(STUDENT_FILE);
         createFileIfNotExists(TUTOR_FILE);
         createFileIfNotExists(ADMIN_FILE);
+        createFileIfNotExists(COURSE_FILE);
+        createFileIfNotExists(ENROLLMENT_FILE);
     }
 
     private static void createFileIfNotExists(String filePath) {
@@ -149,6 +153,152 @@ public class FileHandler {
         } catch (IOException e) {
             throw new IllegalStateException("Error writing students", e);
         }
+    }
+
+    public static void overwriteUsers(List<User> users) {
+        try (BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(USER_FILE, false), StandardCharsets.UTF_8))) {
+            for (User u : users) {
+                writer.write(toUserRecord(u));
+                writer.newLine();
+            }
+        } catch (IOException e) {
+            throw new IllegalStateException("Error writing users", e);
+        }
+    }
+
+    public static void updateUser(User user) {
+        List<User> users = readUsers();
+        for (int i = 0; i < users.size(); i++) {
+            if (users.get(i).getUserId().equals(user.getUserId())) {
+                users.set(i, user);
+                break;
+            }
+        }
+        overwriteUsers(users);
+    }
+
+    public static void deleteUser(String userId) {
+        List<User> users = readUsers();
+        users.removeIf(u -> u.getUserId().equals(userId));
+        overwriteUsers(users);
+    }
+
+    public static void updateStudent(Student student) {
+        List<Student> students = readStudents();
+        for (int i = 0; i < students.size(); i++) {
+            if (students.get(i).getUserId().equals(student.getUserId())) {
+                students.set(i, student);
+                break;
+            }
+        }
+        overwriteStudents(students);
+    }
+
+    public static void deleteStudent(String userId) {
+        List<Student> students = readStudents();
+        students.removeIf(s -> s.getUserId().equals(userId));
+        overwriteStudents(students);
+    }
+
+    public static void updateTutor(Tutor tutor) {
+        List<Tutor> tutors = readTutors();
+        for (int i = 0; i < tutors.size(); i++) {
+            if (tutors.get(i).getUserId().equals(tutor.getUserId())) {
+                tutors.set(i, tutor);
+                break;
+            }
+        }
+        overwriteTutors(tutors);
+    }
+
+    public static void deleteTutor(String userId) {
+        List<Tutor> tutors = readTutors();
+        tutors.removeIf(t -> t.getUserId().equals(userId));
+        overwriteTutors(tutors);
+    }
+
+    public static synchronized String generateNextCourseId() {
+        int max = 0;
+        File file = new File(COURSE_FILE);
+        if (!file.exists()) return "C001";
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(file), StandardCharsets.UTF_8))) {
+            String line;
+            Pattern p = Pattern.compile("^C(\\d+)$");
+            while ((line = reader.readLine()) != null) {
+                if (line.isBlank()) continue;
+                String[] cols = line.split(",", 2);
+                Matcher m = p.matcher(cols[0].trim());
+                if (m.matches()) {
+                    int numeric = Integer.parseInt(m.group(1));
+                    if (numeric > max) max = numeric;
+                }
+            }
+        } catch (IOException e) {}
+        return String.format("C%03d", max + 1);
+    }
+
+    public static synchronized String generateNextEnrollmentId() {
+        int max = 0;
+        File file = new File(ENROLLMENT_FILE);
+        if (!file.exists()) return "E001";
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(file), StandardCharsets.UTF_8))) {
+            String line;
+            Pattern p = Pattern.compile("^E(\\d+)$");
+            while ((line = reader.readLine()) != null) {
+                if (line.isBlank()) continue;
+                String[] cols = line.split(",", 2);
+                Matcher m = p.matcher(cols[0].trim());
+                if (m.matches()) {
+                    int numeric = Integer.parseInt(m.group(1));
+                    if (numeric > max) max = numeric;
+                }
+            }
+        } catch (IOException e) {}
+        return String.format("E%03d", max + 1);
+    }
+
+    public static void saveCourse(Course course) {
+        try (BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(COURSE_FILE, true), StandardCharsets.UTF_8))) {
+            writer.write(String.join(",", course.getCourseId(), course.getTutorId(), course.getTitle(), course.getDescription(), String.valueOf(course.getPrice())));
+            writer.newLine();
+        } catch (IOException e) {}
+    }
+
+    public static List<Course> readCourses() {
+        List<Course> list = new ArrayList<>();
+        try (BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(COURSE_FILE), StandardCharsets.UTF_8))) {
+            String line;
+            while ((line = br.readLine()) != null) {
+                if(line.isBlank()) continue;
+                String[] d = line.split(",");
+                if (d.length >= 5) {
+                    list.add(new Course(d[0], d[1], d[2], d[3], Double.parseDouble(d[4])));
+                }
+            }
+        } catch (IOException e) {}
+        return list;
+    }
+
+    public static void saveEnrollment(Enrollment enrollment) {
+        try (BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(ENROLLMENT_FILE, true), StandardCharsets.UTF_8))) {
+            writer.write(String.join(",", enrollment.getEnrollmentId(), enrollment.getStudentId(), enrollment.getCourseId()));
+            writer.newLine();
+        } catch (IOException e) {}
+    }
+
+    public static List<Enrollment> readEnrollments() {
+        List<Enrollment> list = new ArrayList<>();
+        try (BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(ENROLLMENT_FILE), StandardCharsets.UTF_8))) {
+            String line;
+            while ((line = br.readLine()) != null) {
+                if(line.isBlank()) continue;
+                String[] d = line.split(",");
+                if (d.length >= 3) {
+                    list.add(new Enrollment(d[0], d[1], d[2]));
+                }
+            }
+        } catch (IOException e) {}
+        return list;
     }
 
     private static String toUserRecord(User user) {

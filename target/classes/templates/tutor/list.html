@@ -26,6 +26,7 @@
                     <th>Specialization</th>
                     <th>Experience (Years)</th>
                     <th>Hourly Rate ($)</th>
+                    <th th:if="${userRole == 'ADMIN'}">Actions</th>
                 </tr>
             </thead>
             <tbody>
@@ -37,6 +38,10 @@
                     <td th:text="${tutor.specialization}"></td>
                     <td th:text="${tutor.experienceYears}"></td>
                     <td th:text="${tutor.hourlyRate}"></td>
+                    <td th:if="${userRole == 'ADMIN'}">
+                        <a th:href="@{'/admin/tutor/edit/' + ${tutor.userId}}" class="btn btn-sm btn-warning">Edit</a>
+                        <a th:href="@{'/admin/tutor/delete/' + ${tutor.userId}}" class="btn btn-sm btn-danger" onclick="return confirm('Are you sure?')">Delete</a>
+                    </td>
                 </tr>
                 <tr th:if="${#lists.isEmpty(tutors)}">
                     <td colspan="7" class="text-center">No tutors found.</td>

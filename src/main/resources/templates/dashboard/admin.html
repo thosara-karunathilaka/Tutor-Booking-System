@@ -14,21 +14,30 @@
 <div class="container mt-4">
     <h2>Welcome, Admin!</h2>
     <div class="row mt-4">
-        <div class="col-md-6">
+        <div class="col-md-4">
             <div class="card shadow-sm">
                 <div class="card-body">
                     <h5 class="card-title">Manage Tutors</h5>
-                    <p class="card-text">View and add tutors to the system.</p>
+                    <p class="card-text">View and manage tutors in the system.</p>
                     <a th:href="@{/tutor/list}" class="btn btn-primary">Go to Tutors</a>
                 </div>
             </div>
         </div>
-        <div class="col-md-6">
+        <div class="col-md-4">
             <div class="card shadow-sm">
                 <div class="card-body">
                     <h5 class="card-title">Manage Students</h5>
-                    <p class="card-text">View and add students to the system.</p>
+                    <p class="card-text">View and manage students in the system.</p>
                     <a th:href="@{/student/list}" class="btn btn-success">Go to Students</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title">My Profile</h5>
+                    <p class="card-text">Update your administrative profile details.</p>
+                    <a th:href="@{/admin/profile}" class="btn btn-info text-white">Edit Profile</a>
                 </div>
             </div>
         </div>
