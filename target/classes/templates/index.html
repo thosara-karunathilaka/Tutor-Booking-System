@@ -28,5 +28,32 @@
     </div>
 </section>
 
+<!-- Courses Section -->
+<section style="padding: 60px 20px; max-width: 1200px; margin: 0 auto;">
+    <h2 style="text-align: center; font-size: 2.5rem; margin-bottom: 40px;">Available <span class="gradient-text">Courses</span></h2>
+    
+    <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 30px;">
+        <div th:each="course : ${courses}" class="glass-card" style="padding: 30px; display: flex; flex-direction: column; justify-content: space-between;">
+            <div>
+                <h3 th:text="${course.title}" style="margin-bottom: 15px; font-size: 1.5rem;">Course Title</h3>
+                <p style="color: var(--text-muted); margin-bottom: 8px;">
+                    <strong style="color: var(--text-color);">Tutor:</strong> <span th:text="${course.tutorName ?: 'Unknown'}">Tutor Name</span>
+                </p>
+                <p style="color: var(--text-muted); margin-bottom: 8px;">
+                    <strong style="color: var(--text-color);">Fee:</strong> $<span th:text="${course.price}">0.00</span>
+                </p>
+                <p style="color: var(--text-muted); margin-bottom: 20px;">
+                    <strong style="color: var(--text-color);">Description:</strong> <span th:text="${course.description}">Description details</span>
+                </p>
+            </div>
+            <a th:href="@{/login}" class="btn-glass" style="text-align: center;">Login to Enroll</a>
+        </div>
+    </div>
+    
+    <div th:if="${#lists.isEmpty(courses)}" style="text-align: center; margin-top: 40px;">
+        <p class="glass-card" style="display: inline-block; padding: 20px 40px; color: var(--text-muted);">No courses available at the moment.</p>
+    </div>
+</section>
+
 </body>
 </html>
