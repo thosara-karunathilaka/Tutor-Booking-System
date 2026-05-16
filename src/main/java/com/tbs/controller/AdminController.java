@@ -5,6 +5,7 @@ import com.tbs.model.Tutor;
 import com.tbs.model.User;
 import com.tbs.service.StudentService;
 import com.tbs.service.TutorService;
+import com.tbs.service.CourseService;
 import com.tbs.util.FileHandler;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.stereotype.Controller;
@@ -17,10 +18,12 @@ public class AdminController {
 
     private final StudentService studentService;
     private final TutorService tutorService;
+    private final CourseService courseService;
 
-    public AdminController(StudentService studentService, TutorService tutorService) {
+    public AdminController(StudentService studentService, TutorService tutorService, CourseService courseService) {
         this.studentService = studentService;
         this.tutorService = tutorService;
+        this.courseService = courseService;
     }
 
     @GetMapping("/profile")
@@ -87,6 +90,13 @@ public class AdminController {
         if (!isAdmin(session)) return "redirect:/login";
         tutorService.deleteTutor(id);
         return "redirect:/dashboard/admin";
+    }
+
+    @GetMapping("/tutor/{id}/courses")
+    public String viewTutorCourses(@PathVariable String id, HttpSession session, Model model) {
+        if (!isAdmin(session)) return "redirect:/login";
+        model.addAttribute("courses", courseService.getCoursesByTutor(id));
+        return "student/courses";
     }
 
     private boolean isAdmin(HttpSession session) {

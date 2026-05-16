@@ -13,4 +13,13 @@ public class Course {
     private String title;
     private String description;
     private double price;
+    private String tutorName;
+
+    public Course(String courseId, String tutorId, String title, String description, double price) {
+        this.courseId = courseId;
+        this.tutorId = tutorId;
+        this.title = title;
+        this.description = description;
+        this.price = price;
+    }
 }

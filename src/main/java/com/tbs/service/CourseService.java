@@ -2,6 +2,7 @@ package com.tbs.service;
 
 import com.tbs.model.Course;
 import com.tbs.model.Enrollment;
+import com.tbs.model.Tutor;
 import com.tbs.util.FileHandler;
 import org.springframework.stereotype.Service;
 
@@ -12,7 +13,15 @@ import java.util.stream.Collectors;
 public class CourseService {
 
     public List<Course> getAllCourses() {
-        return FileHandler.readCourses();
+        List<Course> courses = FileHandler.readCourses();
+        List<Tutor> tutors = FileHandler.readTutors();
+        for (Course course : courses) {
+            tutors.stream()
+                  .filter(t -> t.getUserId().equals(course.getTutorId()))
+                  .findFirst()
+                  .ifPresent(tutor -> course.setTutorName(tutor.getName()));
+        }
+        return courses;
     }
 
     public Course getCourseById(String id) {

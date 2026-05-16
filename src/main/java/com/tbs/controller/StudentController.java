@@ -76,4 +76,11 @@ public class StudentController {
         courseService.enrollStudent(userId, courseId);
         return "redirect:/student/courses?enrolled=true";
     }
+
+    @GetMapping("/tutor/{tutorId}/courses")
+    public String browseTutorCourses(@PathVariable String tutorId, HttpSession session, Model model) {
+        if (!"STUDENT".equals(session.getAttribute("role"))) return "redirect:/login";
+        model.addAttribute("courses", courseService.getCoursesByTutor(tutorId));
+        return "student/courses";
+    }
 }

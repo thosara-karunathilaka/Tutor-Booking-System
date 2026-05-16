@@ -51,9 +51,10 @@
     <div class="courses-grid">
         <div class="glass-card" th:each="course : ${courses}" style="display: flex; flex-direction: column;">
             <h3 style="color: var(--accent-purple);" th:text="${course.title}"></h3>
+            <p style="font-size: 0.9em; color: var(--text-muted); margin-top: 5px;">Instructor: <span th:text="${course.tutorName}"></span></p>
             <p style="flex-grow: 1; margin: 15px 0;" th:text="${course.description}"></p>
             <p style="font-weight: 600; color: var(--text-main); margin-bottom: 20px;">Price: $<span th:text="${course.price}"></span></p>
-            <a th:href="@{'/student/enroll/' + ${course.courseId}}" class="btn-premium" style="width: 100%;">Enroll Now</a>
+            <a th:if="${session.role == 'STUDENT'}" th:href="@{'/student/enroll/' + ${course.courseId}}" class="btn-premium" style="width: 100%;">Enroll Now</a>
         </div>
     </div>
     

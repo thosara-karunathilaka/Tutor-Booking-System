@@ -259,7 +259,9 @@ public class FileHandler {
 
     public static void saveCourse(Course course) {
         try (BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(COURSE_FILE, true), StandardCharsets.UTF_8))) {
-            writer.write(String.join(",", course.getCourseId(), course.getTutorId(), course.getTitle(), course.getDescription(), String.valueOf(course.getPrice())));
+            String safeTitle = course.getTitle() != null ? course.getTitle().replace(",", "%2C") : "";
+            String safeDesc = course.getDescription() != null ? course.getDescription().replace(",", "%2C") : "";
+            writer.write(String.join(",", course.getCourseId(), course.getTutorId(), safeTitle, safeDesc, String.valueOf(course.getPrice())));
             writer.newLine();
         } catch (IOException e) {}
     }
@@ -272,7 +274,7 @@ public class FileHandler {
                 if(line.isBlank()) continue;
                 String[] d = line.split(",");
                 if (d.length >= 5) {
-                    list.add(new Course(d[0], d[1], d[2], d[3], Double.parseDouble(d[4])));
+                    list.add(new Course(d[0], d[1], d[2].replace("%2C", ","), d[3].replace("%2C", ","), Double.parseDouble(d[4])));
                 }
             }
         } catch (IOException e) {}
