@@ -1,16 +1,14 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
 
 :root {
-    --bg-dark: #0b0f19;
-    --bg-darker: #06090f;
-    --glass-bg: rgba(255, 255, 255, 0.03);
-    --glass-border: rgba(255, 255, 255, 0.08);
-    --glass-hover: rgba(255, 255, 255, 0.08);
-    --accent-blue: #3b82f6;
-    --accent-blue-hover: #2563eb;
-    --accent-purple: #8b5cf6;
-    --text-main: #f8fafc;
-    --text-muted: #94a3b8;
+    --bg-main: #f9fafb;
+    --bg-card: #ffffff;
+    --border-color: #e5e7eb;
+    --hover-color: #f3f4f6;
+    --accent-primary: #2563eb;
+    --accent-hover: #1d4ed8;
+    --text-main: #111827;
+    --text-muted: #4b5563;
 }
 
 * {
@@ -21,64 +19,28 @@
 }
 
 body {
-    background-color: var(--bg-dark);
+    background-color: var(--bg-main);
     color: var(--text-main);
     min-height: 100vh;
     position: relative;
-    overflow-x: hidden;
 }
 
-/* Background Glowing Orbs */
-body::before, body::after {
-    content: '';
-    position: fixed;
-    width: 600px;
-    height: 600px;
-    border-radius: 50%;
-    filter: blur(120px);
-    z-index: -1;
-    opacity: 0.15;
-    pointer-events: none;
-}
-
-body::before {
-    background: var(--accent-blue);
-    top: -100px;
-    left: -100px;
-}
-
-body::after {
-    background: var(--accent-purple);
-    bottom: -100px;
-    right: -100px;
-}
-
-/* Glassmorphism Utilities */
+/* Utilities */
 .glass-card {
-    background: var(--glass-bg);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
-    border: 1px solid var(--glass-border);
-    border-radius: 16px;
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
     padding: 24px;
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
-    transition: transform 0.3s ease, background 0.3s ease;
-}
-
-.glass-card:hover {
-    transform: translateY(-5px);
-    background: var(--glass-hover);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 }
 
 .glass-nav {
-    background: rgba(11, 15, 25, 0.8);
-    backdrop-filter: blur(16px);
-    -webkit-backdrop-filter: blur(16px);
-    border-bottom: 1px solid var(--glass-border);
+    background: var(--bg-card);
+    border-bottom: 1px solid var(--border-color);
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 20px 60px;
+    padding: 16px 40px;
     position: sticky;
     top: 0;
     z-index: 100;
@@ -97,72 +59,63 @@ p {
 }
 
 .gradient-text {
-    background: linear-gradient(to right, var(--accent-blue), var(--accent-purple));
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    display: inline-block;
+    color: var(--accent-primary);
+    font-weight: 700;
 }
 
 /* Buttons */
 .btn-premium {
-    background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple));
+    background: var(--accent-primary);
     color: white;
     border: none;
-    padding: 12px 24px;
-    border-radius: 8px;
+    padding: 10px 20px;
+    border-radius: 6px;
     font-weight: 500;
     cursor: pointer;
-    transition: all 0.3s ease;
     text-decoration: none;
     display: inline-block;
     text-align: center;
 }
 
 .btn-premium:hover {
-    transform: scale(1.05);
-    box-shadow: 0 4px 15px rgba(59, 130, 246, 0.4);
-    color: white;
+    background: var(--accent-hover);
 }
 
 .btn-glass {
-    background: var(--glass-bg);
+    background: var(--bg-card);
     color: var(--text-main);
-    border: 1px solid var(--glass-border);
-    padding: 12px 24px;
-    border-radius: 8px;
+    border: 1px solid var(--border-color);
+    padding: 10px 20px;
+    border-radius: 6px;
     font-weight: 500;
     cursor: pointer;
-    transition: all 0.3s ease;
     text-decoration: none;
     display: inline-block;
 }
 
 .btn-glass:hover {
-    background: var(--glass-hover);
-    color: white;
+    background: var(--hover-color);
 }
 
 /* Forms */
 .form-control-glass {
-    background: rgba(255, 255, 255, 0.05);
-    border: 1px solid var(--glass-border);
-    color: white;
-    border-radius: 8px;
-    padding: 12px;
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    color: var(--text-main);
+    border-radius: 6px;
+    padding: 10px 12px;
     width: 100%;
-    transition: border-color 0.3s ease, box-shadow 0.3s ease;
 }
 
 .form-control-glass:focus {
     outline: none;
-    border-color: var(--accent-blue);
-    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
-    background: rgba(255, 255, 255, 0.08);
+    border-color: var(--accent-primary);
+    box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.2);
 }
 
 .form-label {
-    color: var(--text-muted);
-    margin-bottom: 8px;
+    color: var(--text-main);
+    margin-bottom: 6px;
     display: block;
     font-weight: 500;
 }
@@ -170,38 +123,35 @@ p {
 /* Tables */
 .glass-table {
     width: 100%;
-    border-collapse: separate;
-    border-spacing: 0;
+    border-collapse: collapse;
     color: var(--text-main);
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
 }
 
 .glass-table th {
-    background: rgba(255, 255, 255, 0.05);
-    padding: 16px;
+    background: var(--hover-color);
+    padding: 12px 16px;
     text-align: left;
     font-weight: 600;
     color: var(--text-muted);
-    text-transform: uppercase;
-    font-size: 0.85rem;
-    letter-spacing: 0.05em;
-    border-bottom: 1px solid var(--glass-border);
+    border-bottom: 1px solid var(--border-color);
 }
 
 .glass-table td {
-    padding: 16px;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.03);
-    transition: background 0.3s ease;
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--border-color);
 }
 
 .glass-table tbody tr:hover td {
-    background: rgba(255, 255, 255, 0.03);
+    background: var(--hover-color);
 }
 
 /* Navbar specific */
 .logo {
     font-size: 24px;
     font-weight: 700;
-    color: var(--text-main);
+    color: var(--accent-primary);
     text-decoration: none;
 }
 
@@ -210,7 +160,6 @@ p {
     text-decoration: none;
     margin-left: 24px;
     font-weight: 500;
-    transition: color 0.3s ease;
 }
 
 .nav-links a:hover {
