@@ -9,6 +9,7 @@ import java.util.List;
 @Service
 public class StudentService {
 
+
     public List<Student> getAllStudents() {
         return FileHandler.readStudents();
     }
@@ -27,7 +28,6 @@ public class StudentService {
         FileHandler.updateUser(student);
         FileHandler.updateStudent(student);
     }
-
     public void deleteStudent(String id) {
         FileHandler.deleteUser(id);
         FileHandler.deleteStudent(id);

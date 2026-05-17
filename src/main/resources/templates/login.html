@@ -15,6 +15,17 @@
             width: 100%;
             max-width: 400px;
         }
+        .flash-success {
+            background: rgba(16, 185, 129, 0.1);
+            border: 1px solid rgba(16, 185, 129, 0.3);
+            color: #059669;
+            padding: 14px 18px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-weight: 500;
+            font-size: 0.95rem;
+            text-align: center;
+        }
     </style>
 </head>
 <body>
@@ -27,22 +38,27 @@
 </nav>
 
 <div class="auth-container">
-    <div class="glass-card auth-card">
-        <h2 style="text-align: center; margin-bottom: 30px;">Welcome Back</h2>
-        <form th:action="@{/login}" method="post">
-            <div style="margin-bottom: 20px;">
-                <label class="form-label">Username</label>
-                <input type="text" name="username" class="form-control-glass" required>
+    <div class="auth-card">
+        <!-- Flash success message (e.g. after register or logout) -->
+        <div class="flash-success" th:if="${flashSuccess != null}" th:text="${flashSuccess}"></div>
+
+        <div class="glass-card">
+            <h2 style="text-align: center; margin-bottom: 30px;">Welcome Back</h2>
+            <form th:action="@{/login}" method="post">
+                <div style="margin-bottom: 20px;">
+                    <label class="form-label">Username</label>
+                    <input type="text" name="username" class="form-control-glass" required>
+                </div>
+                <div style="margin-bottom: 20px;">
+                    <label class="form-label">Password</label>
+                    <input type="password" name="password" class="form-control-glass" required>
+                </div>
+                <p style="color: #ef4444; margin-bottom: 15px; text-align: center; font-size: 0.9rem;" th:if="${error != null}" th:text="${error}"></p>
+                <button type="submit" class="btn-premium" style="width: 100%;">Login</button>
+            </form>
+            <div style="margin-top: 24px; text-align: center;">
+                <a th:href="@{/register}" style="color: var(--text-muted); text-decoration: none; font-size: 0.9rem;">Don't have an account? <span style="color: var(--accent-blue);">Register here</span></a>
             </div>
-            <div style="margin-bottom: 20px;">
-                <label class="form-label">Password</label>
-                <input type="password" name="password" class="form-control-glass" required>
-            </div>
-            <p style="color: #ef4444; margin-bottom: 15px; text-align: center; font-size: 0.9rem;" th:if="${error != null}" th:text="${error}"></p>
-            <button type="submit" class="btn-premium" style="width: 100%;">Login</button>
-        </form>
-        <div style="margin-top: 24px; text-align: center;">
-            <a th:href="@{/register}" style="color: var(--text-muted); text-decoration: none; font-size: 0.9rem;">Don't have an account? <span style="color: var(--accent-blue);">Register here</span></a>
         </div>
     </div>
 </div>

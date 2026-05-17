@@ -12,8 +12,15 @@
 <nav class="glass-nav">
     <a href="/" class="logo gradient-text">TutorBook</a>
     <div class="nav-links">
-        <a th:href="@{/login}" class="btn-glass">Login</a>
-        <a th:href="@{/register}" class="btn-premium">Sign Up</a>
+        <!-- If logged in: show Go to Dashboard. If not: show Login / Sign Up -->
+        <th:block th:if="${session.role != null}">
+            <a th:href="${session.role == 'ADMIN' ? '/dashboard/admin' : (session.role == 'TUTOR' ? '/dashboard/tutor' : '/dashboard/student')}"
+               class="btn-premium">Go to Dashboard</a>
+        </th:block>
+        <th:block th:unless="${session.role != null}">
+            <a th:href="@{/login}" class="btn-glass">Login</a>
+            <a th:href="@{/register}" class="btn-premium">Sign Up</a>
+        </th:block>
     </div>
 </nav>
 

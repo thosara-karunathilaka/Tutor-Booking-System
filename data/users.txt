@@ -7,3 +7,4 @@ U007,dedunu,dedunu jayathilaka,dedunufiverr@gmail.com,123,TUTOR
 U008,teacher1,teacher teacher,teacher1@gmail.com,123,TUTOR
 U009,bimansa,Bimansa Methmini,bimansaranathunga@gmail.com,123,STUDENT
 U010,beam,Beam samarasooriya,beamsamarasooriya@gmail.com,123,TUTOR
+U011,pasindu,Pasindu gunathilaka,pasindu@gmail.com,123,TUTOR
