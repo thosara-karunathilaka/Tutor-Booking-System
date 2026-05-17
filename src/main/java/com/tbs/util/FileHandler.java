@@ -292,6 +292,19 @@ public class FileHandler {
         overwriteCourses(courses);
     }
 
+    public static void deleteEnrollment(String studentId, String courseId) {
+        List<Enrollment> enrollments = readEnrollments();
+        enrollments.removeIf(e -> e.getStudentId().equals(studentId) && e.getCourseId().equals(courseId));
+        try (BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(ENROLLMENT_FILE, false), StandardCharsets.UTF_8))) {
+            for (Enrollment e : enrollments) {
+                writer.write(String.join(",", e.getEnrollmentId(), e.getStudentId(), e.getCourseId()));
+                writer.newLine();
+            }
+        } catch (IOException e) {
+            throw new IllegalStateException("Error writing enrollments", e);
+        }
+    }
+
     public static List<Course> readCourses() {
         List<Course> list = new ArrayList<>();
         try (BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(COURSE_FILE), StandardCharsets.UTF_8))) {

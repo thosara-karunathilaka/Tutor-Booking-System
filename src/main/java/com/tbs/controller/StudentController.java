@@ -77,6 +77,14 @@ public class StudentController {
         return "redirect:/student/courses?enrolled=true";
     }
 
+    @PostMapping("/unenroll/{courseId}")
+    public String unenrollFromCourse(@PathVariable String courseId, HttpSession session) {
+        String userId = (String) session.getAttribute("userId");
+        if (userId == null || !"STUDENT".equals(session.getAttribute("role"))) return "redirect:/login";
+        courseService.unenrollStudent(userId, courseId);
+        return "redirect:/dashboard/student?unenrolled=true";
+    }
+
     @GetMapping("/tutor/{tutorId}/courses")
     public String browseTutorCourses(@PathVariable String tutorId, HttpSession session, Model model) {
         if (!"STUDENT".equals(session.getAttribute("role"))) return "redirect:/login";

@@ -244,6 +244,35 @@
             gap: 4px;
         }
         .view-link:hover { text-decoration: underline; }
+        .btn-remove {
+            display: block;
+            width: 100%;
+            margin-top: 10px;
+            padding: 9px 16px;
+            border-radius: 8px;
+            font-size: 0.82rem;
+            font-weight: 600;
+            font-family: 'Inter', sans-serif;
+            background: #fff5f5;
+            color: #dc2626;
+            border: 1.5px solid #fecaca;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .btn-remove:hover { background: #fee2e2; border-color: #fca5a5; }
+        .alert-removed {
+            background: #dcfce7;
+            border: 1px solid #bbf7d0;
+            color: #15803d;
+            padding: 14px 20px;
+            border-radius: 10px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            margin-bottom: 24px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
 
         /* ── EMPTY ── */
         .empty-card {
@@ -328,6 +357,11 @@
     <!-- ENROLLED COURSES -->
     <div class="section-title">📚 My Enrolled Courses</div>
 
+    <!-- Unenrolled flash message -->
+    <div class="alert-removed" th:if="${param.unenrolled}">
+        ✅ You have successfully removed yourself from the course.
+    </div>
+
     <!-- Has courses -->
     <div class="courses-grid" th:if="${enrolledCourses != null and !#lists.isEmpty(enrolledCourses)}">
         <div class="course-card" th:each="course, iterStat : ${enrolledCourses}">
@@ -371,6 +405,12 @@
             </div>
 
             <a th:href="@{/student/courses}" class="view-link">Tap to view all courses →</a>
+
+            <!-- Remove enrollment -->
+            <form th:action="@{'/student/unenroll/' + ${course.courseId}}" method="post"
+                  onsubmit="return confirm('Remove this course from your enrollments? You can re-enroll anytime.')">
+                <button type="submit" class="btn-remove">🗑 Remove Enrollment</button>
+            </form>
         </div>
     </div>
 

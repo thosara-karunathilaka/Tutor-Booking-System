@@ -1,2 +1,2 @@
 C004,U011,Sinhala,Sinhala lit,200.0,,
-C005,U010,Introduction to python,Learn Python. Python is a popular programming language. Python can be used on a server to create web applications. Python is easy to learn - You will enjoy it!,2000.0,Tuesday|Wednesday,08:00
+C005,U010,test,test,200.0,Monday,03:02
