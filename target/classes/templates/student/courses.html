@@ -98,7 +98,7 @@
             <h3 class="course-title" style="color: var(--accent-purple);" th:text="${course.title}"></h3>
             <p class="course-instructor" style="font-size: 0.9em; color: var(--text-muted); margin-top: 5px;">Instructor: <span th:text="${course.tutorName}"></span></p>
             <p class="course-description" style="flex-grow: 1; margin: 15px 0;" th:text="${course.description}"></p>
-            <p style="font-weight: 600; color: var(--text-main); margin-bottom: 12px;">Price: $<span th:text="${course.price}"></span></p>
+            <p style="font-weight: 600; color: var(--text-main); margin-bottom: 12px;">Price: LKR <span th:text="${course.price}"></span></p>
 
             <!-- Schedule badges -->
             <div th:if="${course.availableDays != null and !course.availableDays.isEmpty()}"

@@ -225,7 +225,7 @@
 
             <div class="course-meta">
                 <span>💰</span>
-                <span>$<span th:text="${course.price}">0.00</span> per session</span>
+                <span>LKR <span th:text="${course.price}">0.00</span> per session</span>
             </div>
 
             <div class="course-meta" th:if="${course.sessionTime != null and !course.sessionTime.isEmpty()}">
