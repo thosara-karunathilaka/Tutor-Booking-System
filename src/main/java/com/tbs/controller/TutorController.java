@@ -55,11 +55,13 @@ public class TutorController {
         tutorService.saveTutor(tutor);
         return "redirect:/tutor/list";
     }
+    /* IT25101329 */
 
     @GetMapping("/profile")
     public String profile(HttpSession session, Model model) {
         String userId = (String) session.getAttribute("userId");
-        if (userId == null || !"TUTOR".equals(session.getAttribute("role"))) return "redirect:/login";
+        if (userId == null || !"TUTOR".equals(session.getAttribute("role")))
+            return "redirect:/login";
         model.addAttribute("tutor", tutorService.getTutorById(userId));
         return "tutor/profile";
     }
@@ -67,7 +69,8 @@ public class TutorController {
     @PostMapping("/profile")
     public String updateProfile(@ModelAttribute Tutor updatedTutor, HttpSession session) {
         String userId = (String) session.getAttribute("userId");
-        if (userId == null || !"TUTOR".equals(session.getAttribute("role"))) return "redirect:/login";
+        if (userId == null || !"TUTOR".equals(session.getAttribute("role")))
+            return "redirect:/login";
         updatedTutor.setUserId(userId);
         updatedTutor.setRole("TUTOR");
         tutorService.updateTutor(updatedTutor);
@@ -78,14 +81,16 @@ public class TutorController {
     @GetMapping("/courses")
     public String myCourses(HttpSession session, Model model) {
         String userId = (String) session.getAttribute("userId");
-        if (userId == null || !"TUTOR".equals(session.getAttribute("role"))) return "redirect:/login";
+        if (userId == null || !"TUTOR".equals(session.getAttribute("role")))
+            return "redirect:/login";
         model.addAttribute("courses", courseService.getCoursesByTutor(userId));
         return "tutor/courses";
     }
 
     @GetMapping("/course/add")
     public String addCourseForm(Model model, HttpSession session) {
-        if (!"TUTOR".equals(session.getAttribute("role"))) return "redirect:/login";
+        if (!"TUTOR".equals(session.getAttribute("role")))
+            return "redirect:/login";
         model.addAttribute("course", new Course());
         return "tutor/add-course";
     }
@@ -93,7 +98,8 @@ public class TutorController {
     @PostMapping("/course/add")
     public String addCourseSubmit(@ModelAttribute Course course, HttpSession session) {
         String userId = (String) session.getAttribute("userId");
-        if (userId == null || !"TUTOR".equals(session.getAttribute("role"))) return "redirect:/login";
+        if (userId == null || !"TUTOR".equals(session.getAttribute("role")))
+            return "redirect:/login";
         course.setTutorId(userId);
         courseService.saveCourse(course);
         return "redirect:/tutor/courses";
@@ -101,7 +107,8 @@ public class TutorController {
 
     @GetMapping("/course/{courseId}/students")
     public String viewEnrolledStudents(@PathVariable String courseId, HttpSession session, Model model) {
-        if (!"TUTOR".equals(session.getAttribute("role"))) return "redirect:/login";
+        if (!"TUTOR".equals(session.getAttribute("role")))
+            return "redirect:/login";
         List<Enrollment> enrollments = courseService.getEnrollmentsByCourse(courseId);
         List<Student> students = enrollments.stream()
                 .map(e -> studentService.getStudentById(e.getStudentId()))
@@ -113,7 +120,8 @@ public class TutorController {
     @PostMapping("/course/{courseId}/delete")
     public String deleteCourse(@PathVariable String courseId, HttpSession session) {
         String userId = (String) session.getAttribute("userId");
-        if (userId == null || !"TUTOR".equals(session.getAttribute("role"))) return "redirect:/login";
+        if (userId == null || !"TUTOR".equals(session.getAttribute("role")))
+            return "redirect:/login";
         // Safety check: only delete if this tutor owns the course
         Course course = courseService.getCourseById(courseId);
         if (course != null && userId.equals(course.getTutorId())) {
