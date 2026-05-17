@@ -62,13 +62,20 @@
             <p style="flex-grow: 1; margin: 15px 0;" th:text="${course.description}"></p>
             <p style="font-weight: 600; color: var(--text-main); margin-bottom: 10px;">Price: $<span th:text="${course.price}"></span></p>
 
-            <!-- Schedule badge -->
-            <div th:if="${course.startDate != null}" style="display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 16px;">
-                <span style="font-size: 0.8rem; padding: 4px 10px; border-radius: 20px; background: rgba(99,179,237,0.12); color: var(--accent-blue, #63b3ed); border: 1px solid rgba(99,179,237,0.25);">
-                    📅 <span th:text="${course.startDate}"></span> → <span th:text="${course.endDate}"></span>
-                </span>
+            <!-- Schedule badges -->
+            <div th:if="${course.availableDays != null and !course.availableDays.isEmpty()}"
+                 style="margin-bottom: 16px;">
+                <div style="display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 6px;">
+                    <span th:each="day : ${course.availableDays}"
+                          style="font-size: 0.78rem; padding: 3px 10px; border-radius: 20px;
+                                 background: rgba(99,179,237,0.12); color: var(--accent-blue, #63b3ed);
+                                 border: 1px solid rgba(99,179,237,0.25);"
+                          th:text="${day.substring(0,3)}"></span>
+                </div>
                 <span th:if="${course.sessionTime != null and !course.sessionTime.isEmpty()}"
-                      style="font-size: 0.8rem; padding: 4px 10px; border-radius: 20px; background: rgba(99,179,237,0.12); color: var(--accent-blue, #63b3ed); border: 1px solid rgba(99,179,237,0.25);">
+                      style="font-size: 0.8rem; padding: 3px 10px; border-radius: 20px;
+                             background: rgba(99,179,237,0.12); color: var(--accent-blue, #63b3ed);
+                             border: 1px solid rgba(99,179,237,0.25);">
                     🕐 <span th:text="${course.sessionTime}"></span>
                 </span>
             </div>

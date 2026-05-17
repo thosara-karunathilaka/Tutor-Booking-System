@@ -98,7 +98,26 @@
             <h3 class="course-title" style="color: var(--accent-purple);" th:text="${course.title}"></h3>
             <p class="course-instructor" style="font-size: 0.9em; color: var(--text-muted); margin-top: 5px;">Instructor: <span th:text="${course.tutorName}"></span></p>
             <p class="course-description" style="flex-grow: 1; margin: 15px 0;" th:text="${course.description}"></p>
-            <p style="font-weight: 600; color: var(--text-main); margin-bottom: 20px;">Price: $<span th:text="${course.price}"></span></p>
+            <p style="font-weight: 600; color: var(--text-main); margin-bottom: 12px;">Price: $<span th:text="${course.price}"></span></p>
+
+            <!-- Schedule badges -->
+            <div th:if="${course.availableDays != null and !course.availableDays.isEmpty()}"
+                 style="margin-bottom: 16px;">
+                <div style="display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 6px;">
+                    <span th:each="day : ${course.availableDays}"
+                          style="font-size: 0.78rem; padding: 3px 10px; border-radius: 20px;
+                                 background: rgba(139,92,246,0.12); color: var(--accent-purple, #a78bfa);
+                                 border: 1px solid rgba(139,92,246,0.25);"
+                          th:text="${day.substring(0,3)}"></span>
+                </div>
+                <span th:if="${course.sessionTime != null and !course.sessionTime.isEmpty()}"
+                      style="font-size: 0.8rem; padding: 3px 10px; border-radius: 20px;
+                             background: rgba(139,92,246,0.12); color: var(--accent-purple, #a78bfa);
+                             border: 1px solid rgba(139,92,246,0.25);">
+                    🕐 <span th:text="${course.sessionTime}"></span>
+                </span>
+            </div>
+
             <a th:if="${session.role == 'STUDENT'}" th:href="@{'/student/enroll/' + ${course.courseId}}" class="btn-premium" style="width: 100%;">Enroll Now</a>
         </div>
     </div>

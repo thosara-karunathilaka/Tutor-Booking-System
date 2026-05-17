@@ -24,15 +24,32 @@
             color: var(--accent-blue, #63b3ed);
             margin-bottom: 16px;
         }
-        .date-row {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 16px;
+        /* Day toggle pills */
+        .days-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 20px;
         }
-        input[type="date"],
-        input[type="time"] {
-            color-scheme: dark;
+        .day-checkbox { display: none; }
+        .day-label {
+            display: inline-block;
+            padding: 8px 16px;
+            border-radius: 20px;
+            border: 1px solid rgba(99, 179, 237, 0.35);
+            color: var(--text-muted, #a0aec0);
+            font-size: 0.88rem;
+            font-weight: 600;
+            cursor: pointer;
+            user-select: none;
+            transition: background 0.2s, color 0.2s, border-color 0.2s;
         }
+        .day-checkbox:checked + .day-label {
+            background: rgba(99, 179, 237, 0.22);
+            border-color: var(--accent-blue, #63b3ed);
+            color: var(--accent-blue, #63b3ed);
+        }
+        input[type="time"] { color-scheme: dark; }
     </style>
 </head>
 <body>
@@ -66,23 +83,23 @@
             <div class="schedule-section">
                 <p class="schedule-section-title">📅 Schedule &amp; Availability</p>
 
-                <div class="date-row" style="margin-bottom: 16px;">
-                    <div>
-                        <label class="form-label">Start Date</label>
-                        <input type="date" class="form-control-glass" th:field="*{startDate}"
-                               id="startDate" required>
-                    </div>
-                    <div>
-                        <label class="form-label">End Date</label>
-                        <input type="date" class="form-control-glass" th:field="*{endDate}"
-                               id="endDate" required>
-                    </div>
+                <!-- Available Days in Week -->
+                <label class="form-label" style="margin-bottom: 10px; display: block;">Available Days in Week</label>
+                <div class="days-grid">
+                    <th:block th:each="day : ${ {'Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'} }">
+                        <input class="day-checkbox" type="checkbox"
+                               th:id="${'day-' + day}"
+                               th:name="availableDays"
+                               th:value="${day}"
+                               th:checked="${course.availableDays != null and course.availableDays.contains(day)}">
+                        <label class="day-label" th:for="${'day-' + day}" th:text="${day.substring(0,3)}"></label>
+                    </th:block>
                 </div>
 
+                <!-- Session Time -->
                 <div>
                     <label class="form-label">Session Time</label>
-                    <input type="time" class="form-control-glass" th:field="*{sessionTime}"
-                           id="sessionTime" required>
+                    <input type="time" class="form-control-glass" th:field="*{sessionTime}" id="sessionTime" required>
                     <small style="color: var(--text-muted, #a0aec0); display: block; margin-top: 6px; font-size: 0.8rem;">
                         Daily session start time for this course
                     </small>
@@ -97,23 +114,5 @@
         </form>
     </div>
 </div>
-
-<script>
-    // Set today as the minimum selectable start date
-    const today = new Date().toISOString().split('T')[0];
-    const startDateInput = document.getElementById('startDate');
-    const endDateInput   = document.getElementById('endDate');
-
-    startDateInput.min = today;
-    endDateInput.min   = today;
-
-    // Keep end date >= start date dynamically
-    startDateInput.addEventListener('change', function () {
-        endDateInput.min = this.value;
-        if (endDateInput.value && endDateInput.value < this.value) {
-            endDateInput.value = this.value;
-        }
-    });
-</script>
 </body>
 </html>
