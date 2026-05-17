@@ -219,21 +219,45 @@ public class FileHandler {
 
     public static synchronized String generateNextCourseId() {
         int max = 0;
-        File file = new File(COURSE_FILE);
-        if (!file.exists()) return "C001";
-        try (BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(file), StandardCharsets.UTF_8))) {
-            String line;
-            Pattern p = Pattern.compile("^C(\\d+)$");
-            while ((line = reader.readLine()) != null) {
-                if (line.isBlank()) continue;
-                String[] cols = line.split(",", 2);
-                Matcher m = p.matcher(cols[0].trim());
-                if (m.matches()) {
-                    int numeric = Integer.parseInt(m.group(1));
-                    if (numeric > max) max = numeric;
+        Pattern p = Pattern.compile("^C(\\d+)$");
+
+        // Scan courses file
+        File courseFile = new File(COURSE_FILE);
+        if (courseFile.exists()) {
+            try (BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(courseFile), StandardCharsets.UTF_8))) {
+                String line;
+                while ((line = reader.readLine()) != null) {
+                    if (line.isBlank()) continue;
+                    String[] cols = line.split(",", 2);
+                    Matcher m = p.matcher(cols[0].trim());
+                    if (m.matches()) {
+                        int numeric = Integer.parseInt(m.group(1));
+                        if (numeric > max) max = numeric;
+                    }
                 }
-            }
-        } catch (IOException e) {}
+            } catch (IOException e) {}
+        }
+
+        // Also scan enrollments file's courseId column (index 2) to avoid reusing
+        // IDs of courses that were deleted but still referenced historically
+        File enrollFile = new File(ENROLLMENT_FILE);
+        if (enrollFile.exists()) {
+            try (BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(enrollFile), StandardCharsets.UTF_8))) {
+                String line;
+                while ((line = reader.readLine()) != null) {
+                    if (line.isBlank()) continue;
+                    String[] cols = line.split(",");
+                    if (cols.length >= 3) {
+                        Matcher m = p.matcher(cols[2].trim());
+                        if (m.matches()) {
+                            int numeric = Integer.parseInt(m.group(1));
+                            if (numeric > max) max = numeric;
+                        }
+                    }
+                }
+            } catch (IOException e) {}
+        }
+
         return String.format("C%03d", max + 1);
     }
 
@@ -287,9 +311,21 @@ public class FileHandler {
     }
 
     public static void deleteCourse(String courseId) {
+        // Remove the course itself
         List<Course> courses = readCourses();
         courses.removeIf(c -> c.getCourseId().equals(courseId));
         overwriteCourses(courses);
+        // Cascade: remove all enrollments that reference this course
+        List<Enrollment> enrollments = readEnrollments();
+        enrollments.removeIf(e -> e.getCourseId().equals(courseId));
+        try (BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(ENROLLMENT_FILE, false), StandardCharsets.UTF_8))) {
+            for (Enrollment e : enrollments) {
+                writer.write(String.join(",", e.getEnrollmentId(), e.getStudentId(), e.getCourseId()));
+                writer.newLine();
+            }
+        } catch (IOException e) {
+            throw new IllegalStateException("Error rewriting enrollments after course delete", e);
+        }
     }
 
     public static void deleteEnrollment(String studentId, String courseId) {
