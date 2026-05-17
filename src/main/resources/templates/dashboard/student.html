@@ -333,11 +333,11 @@
             <div class="stat-label">Total Enrolled</div>
         </div>
         <div class="stat-card green">
-            <div class="stat-num" th:text="${enrolledCourses != null ? enrolledCourses.size() : 0}">0</div>
+            <div class="stat-num" th:text="${activeCount != null ? activeCount : 0}">0</div>
             <div class="stat-label">Active Courses</div>
         </div>
         <div class="stat-card amber">
-            <div class="stat-num">0</div>
+            <div class="stat-num" th:text="${completedCount != null ? completedCount : 0}">0</div>
             <div class="stat-label">Completed</div>
         </div>
         <div class="stat-card purple">
@@ -364,9 +364,18 @@
 
     <!-- Has courses -->
     <div class="courses-grid" th:if="${enrolledCourses != null and !#lists.isEmpty(enrolledCourses)}">
-        <div class="course-card" th:each="course, iterStat : ${enrolledCourses}">
+        <div class="course-card" th:each="course, iterStat : ${enrolledCourses}"
+             th:style="${enrollmentStatuses != null and enrollmentStatuses[course.courseId] == 'COMPLETED'} ? 'border-left: 4px solid #22c55e; background: #f0fdf4;' : ''">
             <div class="course-card-header">
-                <span class="enrolled-badge">✓ Enrolled</span>
+                <!-- Completed badge -->
+                <span th:if="${enrollmentStatuses != null and enrollmentStatuses[course.courseId] == 'COMPLETED'}"
+                      style="font-size:0.7rem;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;
+                             padding:4px 10px;border-radius:20px;background:#dcfce7;color:#15803d;border:1px solid #bbf7d0;">
+                    🎉 Completed
+                </span>
+                <!-- Enrolled badge -->
+                <span th:unless="${enrollmentStatuses != null and enrollmentStatuses[course.courseId] == 'COMPLETED'}"
+                      class="enrolled-badge">✓ Enrolled</span>
                 <span class="course-num" th:text="'#' + ${iterStat.count}">#1</span>
             </div>
 
@@ -396,18 +405,25 @@
                 </span>
             </div>
 
-            <!-- Progress -->
+            <!-- Progress bar — full green if completed, partial blue if active -->
             <div class="progress-wrap">
                 <div class="progress-bar-bg">
-                    <div class="progress-bar-fill"></div>
+                    <div th:if="${enrollmentStatuses != null and enrollmentStatuses[course.courseId] == 'COMPLETED'}"
+                         class="progress-bar-fill" style="width:100%; background: linear-gradient(90deg,#22c55e,#16a34a);"></div>
+                    <div th:unless="${enrollmentStatuses != null and enrollmentStatuses[course.courseId] == 'COMPLETED'}"
+                         class="progress-bar-fill"></div>
                 </div>
-                <div class="progress-label">In Progress</div>
+                <div class="progress-label"
+                     th:text="${enrollmentStatuses != null and enrollmentStatuses[course.courseId] == 'COMPLETED'} ? '✓ Completed' : 'In Progress'">
+                    In Progress
+                </div>
             </div>
 
             <a th:href="@{/student/courses}" class="view-link">Tap to view all courses →</a>
 
-            <!-- Remove enrollment -->
-            <form th:action="@{'/student/unenroll/' + ${course.courseId}}" method="post"
+            <!-- Remove enrollment — only shown if NOT completed -->
+            <form th:unless="${enrollmentStatuses != null and enrollmentStatuses[course.courseId] == 'COMPLETED'}"
+                  th:action="@{'/student/unenroll/' + ${course.courseId}}" method="post"
                   onsubmit="return confirm('Remove this course from your enrollments? You can re-enroll anytime.')">
                 <button type="submit" class="btn-remove">🗑 Remove Enrollment</button>
             </form>

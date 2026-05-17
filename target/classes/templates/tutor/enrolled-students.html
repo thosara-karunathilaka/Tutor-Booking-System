@@ -3,56 +3,163 @@
 <head>
     <title>Enrolled Students</title>
     <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
-        .page-container {
-            padding: 40px;
-            max-width: 1000px;
-            margin: 0 auto;
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { background: #f0f4f8; font-family: 'Inter', sans-serif; color: #1e293b; }
+
+        .top-nav {
+            background: #ffffff; border-bottom: 1px solid #e2e8f0;
+            padding: 0 32px; height: 60px;
+            display: flex; align-items: center; justify-content: space-between;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.06);
         }
-        .header-actions {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
+        .nav-logo { font-size: 1.2rem; font-weight: 800; color: #1a56db; text-decoration: none; }
+        .nav-btn { padding: 8px 18px; border-radius: 8px; font-size: 0.875rem; font-weight: 600; text-decoration: none; transition: all 0.2s; border: 1.5px solid #cbd5e1; color: #64748b; background: transparent; }
+        .nav-btn:hover { border-color: #1a56db; color: #1a56db; background: #eff6ff; }
+
+        .page-wrap { max-width: 900px; margin: 0 auto; padding: 32px 24px; }
+
+        .page-header {
+            display: flex; justify-content: space-between; align-items: center;
             margin-bottom: 24px;
         }
+        .page-header h1 { font-size: 1.5rem; font-weight: 800; color: #0f172a; }
+
+        .back-btn {
+            padding: 9px 18px; border-radius: 8px; font-size: 0.875rem; font-weight: 600;
+            text-decoration: none; border: 1.5px solid #e2e8f0; color: #64748b; background: white;
+            transition: all 0.2s;
+        }
+        .back-btn:hover { border-color: #1a56db; color: #1a56db; background: #eff6ff; }
+
+        .student-card {
+            background: white; border: 1px solid #e2e8f0; border-radius: 14px;
+            padding: 20px 24px; margin-bottom: 14px;
+            display: flex; align-items: center; justify-content: space-between;
+            transition: box-shadow 0.2s;
+        }
+        .student-card:hover { box-shadow: 0 4px 16px rgba(0,0,0,0.07); }
+        .student-card.completed { border-left: 4px solid #22c55e; background: #f0fdf4; }
+
+        .student-info { display: flex; align-items: center; gap: 16px; }
+        .student-avatar {
+            width: 44px; height: 44px; border-radius: 50%;
+            background: linear-gradient(135deg, #3b82f6, #6366f1);
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1.1rem; font-weight: 700; color: white;
+            flex-shrink: 0;
+        }
+        .student-avatar.done { background: linear-gradient(135deg, #22c55e, #16a34a); }
+        .student-name { font-size: 1rem; font-weight: 700; color: #0f172a; margin-bottom: 2px; }
+        .student-meta { font-size: 0.8rem; color: #64748b; }
+
+        .student-right { display: flex; align-items: center; gap: 12px; }
+
+        .status-badge {
+            font-size: 0.75rem; font-weight: 700; padding: 5px 12px;
+            border-radius: 20px; text-transform: uppercase; letter-spacing: 0.05em;
+        }
+        .badge-active { background: #dbeafe; color: #1d4ed8; border: 1px solid #bfdbfe; }
+        .badge-completed { background: #dcfce7; color: #15803d; border: 1px solid #bbf7d0; }
+
+        .btn-complete {
+            padding: 8px 16px; border-radius: 8px; font-size: 0.82rem; font-weight: 600;
+            background: #1a56db; color: white; border: none; cursor: pointer;
+            font-family: 'Inter', sans-serif; transition: background 0.2s;
+        }
+        .btn-complete:hover { background: #1d4ed8; }
+
+        .completed-label {
+            font-size: 0.82rem; font-weight: 600; color: #15803d;
+            display: flex; align-items: center; gap: 4px;
+        }
+
+        .empty-card {
+            background: white; border: 1px dashed #cbd5e1; border-radius: 14px;
+            padding: 48px; text-align: center;
+        }
+        .empty-card p { color: #94a3b8; font-size: 0.95rem; }
+
+        .summary-row {
+            display: flex; gap: 12px; margin-bottom: 20px;
+        }
+        .summary-chip {
+            background: white; border: 1px solid #e2e8f0; border-radius: 10px;
+            padding: 10px 18px; font-size: 0.85rem; font-weight: 600;
+        }
+        .summary-chip span { font-size: 1.2rem; font-weight: 800; display: block; margin-bottom: 2px; }
+        .summary-chip.blue span { color: #2563eb; }
+        .summary-chip.green span { color: #16a34a; }
     </style>
 </head>
 <body>
-<nav class="glass-nav">
-    <a href="/" class="logo gradient-text">TutorBook</a>
-    <div class="nav-links">
-        <a th:href="@{/logout}" class="btn-glass">Logout</a>
-    </div>
+
+<nav class="top-nav">
+    <a href="/dashboard/tutor" class="nav-logo">📚 TutorBook</a>
+    <a th:href="@{/logout}" class="nav-btn">Logout</a>
 </nav>
 
-<div class="page-container">
-    <div class="header-actions">
-        <h2><span class="gradient-text">Enrolled Students</span></h2>
-        <a th:href="@{/tutor/courses}" class="btn-glass">Back to My Courses</a>
+<div class="page-wrap">
+    <div class="page-header">
+        <h1>👥 Enrolled Students</h1>
+        <a th:href="@{/tutor/courses}" class="back-btn">← Back to My Courses</a>
     </div>
-    
-    <div class="glass-card" style="padding: 0; overflow-x: auto;">
-        <table class="glass-table">
-            <thead>
-                <tr>
-                    <th>Student Name</th>
-                    <th>Email</th>
-                    <th>Phone Number</th>
-                    <th>Grade Level</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr th:each="student : ${students}">
-                    <td th:text="${student.name}"></td>
-                    <td th:text="${student.email}"></td>
-                    <td th:text="${student.phoneNumber}"></td>
-                    <td th:text="${student.gradeLevel}"></td>
-                </tr>
-                <tr th:if="${#lists.isEmpty(students)}">
-                    <td colspan="4" style="text-align: center; padding: 30px;">No students have enrolled in this course yet.</td>
-                </tr>
-            </tbody>
-        </table>
+
+    <!-- Summary chips -->
+    <div class="summary-row" th:if="${!#lists.isEmpty(students)}">
+        <div class="summary-chip blue">
+            <span th:text="${#lists.size(students)}">0</span>
+            Total Enrolled
+        </div>
+        <div class="summary-chip green">
+            <span th:text="${completedStudentCount != null ? completedStudentCount : 0}">0</span>
+            Completed
+        </div>
+    </div>
+
+    <!-- Student cards -->
+    <div th:each="student : ${students}">
+        <div class="student-card" th:classappend="${statusMap[student.userId] == 'COMPLETED'} ? 'completed' : ''">
+            <div class="student-info">
+                <div class="student-avatar"
+                     th:classappend="${statusMap[student.userId] == 'COMPLETED'} ? ' done' : ''"
+                     th:text="${student.name != null ? student.name.substring(0,1).toUpperCase() : '?'}">A</div>
+                <div>
+                    <div class="student-name" th:text="${student.name}">Student Name</div>
+                    <div class="student-meta">
+                        📧 <span th:text="${student.email}">email</span>
+                        &nbsp;·&nbsp;
+                        📞 <span th:text="${student.phoneNumber}">phone</span>
+                        &nbsp;·&nbsp;
+                        🎓 Grade: <span th:text="${student.gradeLevel}">level</span>
+                    </div>
+                </div>
+            </div>
+            <div class="student-right">
+                <!-- Status badge -->
+                <span class="status-badge"
+                      th:classappend="${statusMap[student.userId] == 'COMPLETED'} ? 'badge-completed' : 'badge-active'"
+                      th:text="${statusMap[student.userId] == 'COMPLETED'} ? '✓ Completed' : 'Active'">Active</span>
+
+                <!-- Complete button (only if not already completed) -->
+                <form th:if="${statusMap[student.userId] != 'COMPLETED'}"
+                      th:action="@{'/tutor/course/' + ${courseId} + '/complete/' + ${student.userId}}"
+                      method="post"
+                      onsubmit="return confirm('Mark this student as completed for this course?')">
+                    <button type="submit" class="btn-complete">✅ Mark Complete</button>
+                </form>
+
+                <span th:if="${statusMap[student.userId] == 'COMPLETED'}" class="completed-label">
+                    🎉 Done
+                </span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Empty state -->
+    <div class="empty-card" th:if="${#lists.isEmpty(students)}">
+        <p>No students have enrolled in this course yet.</p>
     </div>
 </div>
 </body>

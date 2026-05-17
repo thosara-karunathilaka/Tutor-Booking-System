@@ -367,7 +367,8 @@ public class FileHandler {
 
     public static void saveEnrollment(Enrollment enrollment) {
         try (BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(ENROLLMENT_FILE, true), StandardCharsets.UTF_8))) {
-            writer.write(String.join(",", enrollment.getEnrollmentId(), enrollment.getStudentId(), enrollment.getCourseId()));
+            String status = enrollment.getStatus() != null ? enrollment.getStatus() : "ACTIVE";
+            writer.write(String.join(",", enrollment.getEnrollmentId(), enrollment.getStudentId(), enrollment.getCourseId(), status));
             writer.newLine();
         } catch (IOException e) {}
     }
@@ -380,11 +381,33 @@ public class FileHandler {
                 if(line.isBlank()) continue;
                 String[] d = line.split(",");
                 if (d.length >= 3) {
-                    list.add(new Enrollment(d[0], d[1], d[2]));
+                    // field[3] = status (backward-compatible — default ACTIVE if missing)
+                    String status = d.length >= 4 ? d[3].trim() : "ACTIVE";
+                    list.add(new Enrollment(d[0], d[1], d[2], status));
                 }
             }
         } catch (IOException e) {}
         return list;
+    }
+
+    public static void completeEnrollment(String studentId, String courseId) {
+        List<Enrollment> enrollments = readEnrollments();
+        for (Enrollment e : enrollments) {
+            if (e.getStudentId().equals(studentId) && e.getCourseId().equals(courseId)) {
+                e.setStatus("COMPLETED");
+                break;
+            }
+        }
+        // Rewrite all enrollments with updated status
+        try (BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(ENROLLMENT_FILE, false), StandardCharsets.UTF_8))) {
+            for (Enrollment e : enrollments) {
+                String status = e.getStatus() != null ? e.getStatus() : "ACTIVE";
+                writer.write(String.join(",", e.getEnrollmentId(), e.getStudentId(), e.getCourseId(), status));
+                writer.newLine();
+            }
+        } catch (IOException ex) {
+            throw new IllegalStateException("Error updating enrollment status", ex);
+        }
     }
 
     private static String toCourseRecord(Course course) {

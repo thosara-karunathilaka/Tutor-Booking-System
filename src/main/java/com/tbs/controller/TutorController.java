@@ -113,8 +113,27 @@ public class TutorController {
         List<Student> students = enrollments.stream()
                 .map(e -> studentService.getStudentById(e.getStudentId()))
                 .collect(Collectors.toList());
+        // Build a map of studentId -> status so the template knows who is completed
+        java.util.Map<String, String> statusMap = new java.util.HashMap<>();
+        for (Enrollment e : enrollments) {
+            statusMap.put(e.getStudentId(), e.getStatus() != null ? e.getStatus() : "ACTIVE");
+        }
         model.addAttribute("students", students);
+        model.addAttribute("statusMap", statusMap);
+        model.addAttribute("courseId", courseId);
+        long completedStudentCount = statusMap.values().stream().filter("COMPLETED"::equals).count();
+        model.addAttribute("completedStudentCount", completedStudentCount);
         return "tutor/enrolled-students";
+    }
+
+    @PostMapping("/course/{courseId}/complete/{studentId}")
+    public String completeStudentEnrollment(@PathVariable String courseId,
+                                            @PathVariable String studentId,
+                                            HttpSession session) {
+        if (!"TUTOR".equals(session.getAttribute("role")))
+            return "redirect:/login";
+        courseService.completeEnrollment(studentId, courseId);
+        return "redirect:/tutor/course/" + courseId + "/students";
     }
 
     @GetMapping("/course/{courseId}/edit")
