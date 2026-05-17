@@ -1,14 +1,18 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
 
 :root {
-    --bg-main: #f9fafb;
+    --bg-main: #f8fafc;
     --bg-card: #ffffff;
-    --border-color: #e5e7eb;
-    --hover-color: #f3f4f6;
-    --accent-primary: #2563eb;
-    --accent-hover: #1d4ed8;
-    --text-main: #111827;
-    --text-muted: #4b5563;
+    --border-color: #e2e8f0;
+    --hover-color: #f1f5f9;
+    --accent-primary: #4f46e5;
+    --accent-hover: #4338ca;
+    --accent-light: #e0e7ff;
+    --text-main: #0f172a;
+    --text-muted: #64748b;
+    --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+    --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+    --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
 }
 
 * {
@@ -20,27 +24,38 @@
 
 body {
     background-color: var(--bg-main);
+    background-image: radial-gradient(at 100% 0%, hsla(225,39%,30%,0.03) 0px, transparent 50%),
+                      radial-gradient(at 0% 100%, hsla(245,100%,73%,0.03) 0px, transparent 50%);
     color: var(--text-main);
     min-height: 100vh;
     position: relative;
+    -webkit-font-smoothing: antialiased;
 }
 
 /* Utilities */
 .glass-card {
     background: var(--bg-card);
     border: 1px solid var(--border-color);
-    border-radius: 8px;
-    padding: 24px;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    border-radius: 16px;
+    padding: 32px;
+    box-shadow: var(--shadow-md);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.glass-card:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-lg);
 }
 
 .glass-nav {
-    background: var(--bg-card);
+    background: rgba(255, 255, 255, 0.85);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
     border-bottom: 1px solid var(--border-color);
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 16px 40px;
+    padding: 16px 5%;
     position: sticky;
     top: 0;
     z-index: 100;
@@ -49,18 +64,21 @@ body {
 /* Typography */
 h1, h2, h3, h4, h5, h6 {
     color: var(--text-main);
-    font-weight: 600;
+    font-weight: 700;
     margin-bottom: 1rem;
+    letter-spacing: -0.02em;
 }
 
 p {
     color: var(--text-muted);
-    line-height: 1.6;
+    line-height: 1.7;
 }
 
 .gradient-text {
-    color: var(--accent-primary);
-    font-weight: 700;
+    background: linear-gradient(135deg, var(--accent-primary) 0%, #8b5cf6 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    font-weight: 800;
 }
 
 /* Buttons */
@@ -68,34 +86,44 @@ p {
     background: var(--accent-primary);
     color: white;
     border: none;
-    padding: 10px 20px;
-    border-radius: 6px;
-    font-weight: bold;
+    padding: 12px 28px;
+    border-radius: 8px;
+    font-weight: 700;
+    font-size: 0.95rem;
     cursor: pointer;
+    transition: all 0.2s ease;
     text-decoration: none;
     display: inline-block;
     text-align: center;
+    box-shadow: 0 4px 6px -1px rgba(79, 70, 229, 0.3);
 }
 
 .btn-premium:hover {
     background: var(--accent-hover);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px -2px rgba(79, 70, 229, 0.4);
     color: white;
 }
 
 .btn-glass {
-    background: var(--bg-card);
+    background: white;
     color: var(--text-main);
     border: 1px solid var(--border-color);
-    padding: 10px 20px;
-    border-radius: 6px;
-    font-weight: 500;
+    padding: 12px 28px;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 0.95rem;
     cursor: pointer;
+    transition: all 0.2s ease;
     text-decoration: none;
     display: inline-block;
+    box-shadow: var(--shadow-sm);
 }
 
 .btn-glass:hover {
     background: var(--hover-color);
+    border-color: #cbd5e1;
+    color: var(--text-main);
 }
 
 /* Forms */
@@ -103,64 +131,85 @@ p {
     background: var(--bg-card);
     border: 1px solid var(--border-color);
     color: var(--text-main);
-    border-radius: 6px;
-    padding: 10px 12px;
+    border-radius: 8px;
+    padding: 12px 16px;
     width: 100%;
+    transition: all 0.2s ease;
+    font-size: 0.95rem;
 }
 
 .form-control-glass:focus {
     outline: none;
     border-color: var(--accent-primary);
-    box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.2);
+    box-shadow: 0 0 0 3px var(--accent-light);
 }
 
 .form-label {
     color: var(--text-main);
-    margin-bottom: 6px;
+    margin-bottom: 8px;
     display: block;
-    font-weight: 500;
+    font-weight: 600;
+    font-size: 0.9rem;
 }
 
 /* Tables */
 .glass-table {
     width: 100%;
-    border-collapse: collapse;
+    border-collapse: separate;
+    border-spacing: 0;
     color: var(--text-main);
     background: var(--bg-card);
+    border-radius: 12px;
+    overflow: hidden;
     border: 1px solid var(--border-color);
+    box-shadow: var(--shadow-sm);
 }
 
 .glass-table th {
-    background: var(--hover-color);
-    padding: 12px 16px;
+    background: var(--bg-main);
+    padding: 16px;
     text-align: left;
     font-weight: 600;
     color: var(--text-muted);
     border-bottom: 1px solid var(--border-color);
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
 }
 
 .glass-table td {
-    padding: 12px 16px;
+    padding: 16px;
     border-bottom: 1px solid var(--border-color);
+    font-size: 0.95rem;
 }
 
-.glass-table tbody tr:hover td {
-    background: var(--hover-color);
+.glass-table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+.glass-table tbody tr {
+    transition: background-color 0.2s ease;
+}
+
+.glass-table tbody tr:hover {
+    background-color: var(--hover-color);
 }
 
 /* Navbar specific */
 .logo {
-    font-size: 24px;
-    font-weight: 700;
-    color: var(--accent-primary);
+    font-size: 26px;
+    font-weight: 800;
     text-decoration: none;
+    letter-spacing: -0.03em;
 }
 
 .nav-links a {
     color: var(--text-muted);
     text-decoration: none;
-    margin-left: 24px;
-    font-weight: 500;
+    margin-left: 32px;
+    font-weight: 600;
+    font-size: 0.95rem;
+    transition: color 0.2s ease;
 }
 
 .nav-links a:hover {
