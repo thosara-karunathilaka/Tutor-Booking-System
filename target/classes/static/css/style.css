@@ -70,7 +70,7 @@ p {
     border: none;
     padding: 10px 20px;
     border-radius: 6px;
-    font-weight: 500;
+    font-weight: bold;
     cursor: pointer;
     text-decoration: none;
     display: inline-block;
@@ -79,6 +79,7 @@ p {
 
 .btn-premium:hover {
     background: var(--accent-hover);
+    color: white;
 }
 
 .btn-glass {
