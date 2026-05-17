@@ -117,6 +117,34 @@ public class TutorController {
         return "tutor/enrolled-students";
     }
 
+    @GetMapping("/course/{courseId}/edit")
+    public String editCourseForm(@PathVariable String courseId, HttpSession session, Model model) {
+        String userId = (String) session.getAttribute("userId");
+        if (userId == null || !"TUTOR".equals(session.getAttribute("role")))
+            return "redirect:/login";
+        Course course = courseService.getCourseById(courseId);
+        if (course == null || !userId.equals(course.getTutorId()))
+            return "redirect:/tutor/courses";
+        model.addAttribute("course", course);
+        return "tutor/edit-course";
+    }
+
+    @PostMapping("/course/{courseId}/edit")
+    public String editCourseSubmit(@PathVariable String courseId,
+                                   @ModelAttribute Course course,
+                                   HttpSession session) {
+        String userId = (String) session.getAttribute("userId");
+        if (userId == null || !"TUTOR".equals(session.getAttribute("role")))
+            return "redirect:/login";
+        Course existing = courseService.getCourseById(courseId);
+        if (existing == null || !userId.equals(existing.getTutorId()))
+            return "redirect:/tutor/courses";
+        course.setCourseId(courseId);
+        course.setTutorId(userId);
+        courseService.updateCourse(course);
+        return "redirect:/tutor/courses";
+    }
+
     @PostMapping("/course/{courseId}/delete")
     public String deleteCourse(@PathVariable String courseId, HttpSession session) {
         String userId = (String) session.getAttribute("userId");

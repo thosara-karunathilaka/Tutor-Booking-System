@@ -259,19 +259,26 @@ public class FileHandler {
 
     public static void saveCourse(Course course) {
         try (BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(COURSE_FILE, true), StandardCharsets.UTF_8))) {
-            String safeTitle = course.getTitle() != null ? course.getTitle().replace(",", "%2C") : "";
-            String safeDesc = course.getDescription() != null ? course.getDescription().replace(",", "%2C") : "";
-            writer.write(String.join(",", course.getCourseId(), course.getTutorId(), safeTitle, safeDesc, String.valueOf(course.getPrice())));
+            writer.write(toCourseRecord(course));
             writer.newLine();
         } catch (IOException e) {}
+    }
+
+    public static void updateCourse(Course course) {
+        List<Course> courses = readCourses();
+        for (int i = 0; i < courses.size(); i++) {
+            if (courses.get(i).getCourseId().equals(course.getCourseId())) {
+                courses.set(i, course);
+                break;
+            }
+        }
+        overwriteCourses(courses);
     }
 
     public static void overwriteCourses(List<Course> courses) {
         try (BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(COURSE_FILE, false), StandardCharsets.UTF_8))) {
             for (Course course : courses) {
-                String safeTitle = course.getTitle() != null ? course.getTitle().replace(",", "%2C") : "";
-                String safeDesc = course.getDescription() != null ? course.getDescription().replace(",", "%2C") : "";
-                writer.write(String.join(",", course.getCourseId(), course.getTutorId(), safeTitle, safeDesc, String.valueOf(course.getPrice())));
+                writer.write(toCourseRecord(course));
                 writer.newLine();
             }
         } catch (IOException e) {
@@ -293,7 +300,16 @@ public class FileHandler {
                 if(line.isBlank()) continue;
                 String[] d = line.split(",");
                 if (d.length >= 5) {
-                    list.add(new Course(d[0], d[1], d[2].replace("%2C", ","), d[3].replace("%2C", ","), Double.parseDouble(d[4])));
+                    Course c = new Course(d[0], d[1], d[2].replace("%2C", ","), d[3].replace("%2C", ","), Double.parseDouble(d[4]));
+                    // field[5] = pipe-separated availableDays, field[6] = sessionTime
+                    if (d.length >= 6 && !d[5].isBlank()) {
+                        List<String> days = new ArrayList<>(Arrays.asList(d[5].split("\\|")));
+                        c.setAvailableDays(days);
+                    }
+                    if (d.length >= 7 && !d[6].isBlank()) {
+                        c.setSessionTime(d[6]);
+                    }
+                    list.add(c);
                 }
             }
         } catch (IOException e) {}
@@ -320,6 +336,16 @@ public class FileHandler {
             }
         } catch (IOException e) {}
         return list;
+    }
+
+    private static String toCourseRecord(Course course) {
+        String safeTitle = course.getTitle() != null ? course.getTitle().replace(",", "%2C") : "";
+        String safeDesc = course.getDescription() != null ? course.getDescription().replace(",", "%2C") : "";
+        String days = (course.getAvailableDays() != null && !course.getAvailableDays().isEmpty())
+                ? String.join("|", course.getAvailableDays()) : "";
+        String time = course.getSessionTime() != null ? course.getSessionTime() : "";
+        return String.join(",", course.getCourseId(), course.getTutorId(), safeTitle, safeDesc,
+                String.valueOf(course.getPrice()), days, time);
     }
 
     private static String toUserRecord(User user) {

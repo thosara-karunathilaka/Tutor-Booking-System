@@ -36,6 +36,26 @@
         .btn-danger:hover {
             background: #dc2626;
         }
+        .btn-edit {
+            display: block;
+            background: rgba(251,191,36,0.15);
+            color: #fbbf24;
+            border: 1px solid rgba(251,191,36,0.35);
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            text-align: center;
+            text-decoration: none;
+            width: 100%;
+            margin-top: 10px;
+            box-sizing: border-box;
+            transition: background 0.2s ease, color 0.2s ease;
+        }
+        .btn-edit:hover {
+            background: rgba(251,191,36,0.28);
+            color: #f59e0b;
+        }
     </style>
 </head>
 <body>
@@ -81,6 +101,7 @@
             </div>
 
             <a th:href="@{'/tutor/course/' + ${course.courseId} + '/students'}" class="btn-premium" style="width: 100%;">Enrolled Students</a>
+            <a th:href="@{'/tutor/course/' + ${course.courseId} + '/edit'}" class="btn-edit">✏️ Edit Course</a>
             <form th:action="@{'/tutor/course/' + ${course.courseId} + '/delete'}" method="post"
                   onsubmit="return confirm('Are you sure you want to delete this course? This cannot be undone.')">
                 <button type="submit" class="btn-danger">🗑 Delete Course</button>

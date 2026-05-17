@@ -46,6 +46,10 @@ public class CourseService {
         return FileHandler.readEnrollments().stream().filter(e -> e.getCourseId().equals(courseId)).collect(Collectors.toList());
     }
 
+    public void updateCourse(Course course) {
+        FileHandler.updateCourse(course);
+    }
+
     public void deleteCourse(String courseId) {
         FileHandler.deleteCourse(courseId);
     }
