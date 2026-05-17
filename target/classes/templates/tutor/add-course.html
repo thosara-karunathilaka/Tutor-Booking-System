@@ -6,8 +6,32 @@
     <style>
         .page-container {
             padding: 40px;
-            max-width: 600px;
+            max-width: 640px;
             margin: 0 auto;
+        }
+        .schedule-section {
+            border: 1px solid rgba(99, 179, 237, 0.25);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 24px;
+            background: rgba(99, 179, 237, 0.04);
+        }
+        .schedule-section-title {
+            font-size: 0.85rem;
+            font-weight: 700;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: var(--accent-blue, #63b3ed);
+            margin-bottom: 16px;
+        }
+        .date-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+        input[type="date"],
+        input[type="time"] {
+            color-scheme: dark;
         }
     </style>
 </head>
@@ -23,18 +47,49 @@
     <div class="glass-card">
         <h2 style="margin-bottom: 24px;"><span class="gradient-text">Add New Course</span></h2>
         <form th:action="@{/tutor/course/add}" th:object="${course}" method="post">
+
+            <!-- Basic Info -->
             <div style="margin-bottom: 20px;">
                 <label class="form-label">Title</label>
-                <input type="text" class="form-control-glass" th:field="*{title}" required>
+                <input type="text" class="form-control-glass" th:field="*{title}" placeholder="e.g. Introduction to Algebra" required>
             </div>
             <div style="margin-bottom: 20px;">
                 <label class="form-label">Description</label>
-                <textarea class="form-control-glass" th:field="*{description}" rows="4" required></textarea>
+                <textarea class="form-control-glass" th:field="*{description}" rows="4" placeholder="Describe what students will learn..." required></textarea>
             </div>
             <div style="margin-bottom: 24px;">
                 <label class="form-label">Price ($)</label>
-                <input type="number" step="0.01" class="form-control-glass" th:field="*{price}" required>
+                <input type="number" step="0.01" min="0" class="form-control-glass" th:field="*{price}" placeholder="0.00" required>
             </div>
+
+            <!-- Schedule Section -->
+            <div class="schedule-section">
+                <p class="schedule-section-title">📅 Schedule &amp; Availability</p>
+
+                <div class="date-row" style="margin-bottom: 16px;">
+                    <div>
+                        <label class="form-label">Start Date</label>
+                        <input type="date" class="form-control-glass" th:field="*{startDate}"
+                               id="startDate" required>
+                    </div>
+                    <div>
+                        <label class="form-label">End Date</label>
+                        <input type="date" class="form-control-glass" th:field="*{endDate}"
+                               id="endDate" required>
+                    </div>
+                </div>
+
+                <div>
+                    <label class="form-label">Session Time</label>
+                    <input type="time" class="form-control-glass" th:field="*{sessionTime}"
+                           id="sessionTime" required>
+                    <small style="color: var(--text-muted, #a0aec0); display: block; margin-top: 6px; font-size: 0.8rem;">
+                        Daily session start time for this course
+                    </small>
+                </div>
+            </div>
+
+            <!-- Actions -->
             <div style="display: flex; gap: 15px;">
                 <button type="submit" class="btn-premium" style="flex: 1;">Save Course</button>
                 <a th:href="@{/tutor/courses}" class="btn-glass" style="flex: 1; text-align: center;">Cancel</a>
@@ -42,5 +97,23 @@
         </form>
     </div>
 </div>
+
+<script>
+    // Set today as the minimum selectable start date
+    const today = new Date().toISOString().split('T')[0];
+    const startDateInput = document.getElementById('startDate');
+    const endDateInput   = document.getElementById('endDate');
+
+    startDateInput.min = today;
+    endDateInput.min   = today;
+
+    // Keep end date >= start date dynamically
+    startDateInput.addEventListener('change', function () {
+        endDateInput.min = this.value;
+        if (endDateInput.value && endDateInput.value < this.value) {
+            endDateInput.value = this.value;
+        }
+    });
+</script>
 </body>
 </html>
