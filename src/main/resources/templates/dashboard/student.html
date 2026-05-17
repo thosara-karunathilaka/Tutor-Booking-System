@@ -1,109 +1,387 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>Student Dashboard</title>
+    <title>Student Dashboard – TutorBook</title>
     <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
-        .dashboard-container {
-            padding: 40px;
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            background: #f0f4f8;
+            font-family: 'Inter', sans-serif;
+            color: #1e293b;
+            min-height: 100vh;
+        }
+
+        /* ── NAV ── */
+        .top-nav {
+            background: #ffffff;
+            border-bottom: 1px solid #e2e8f0;
+            padding: 0 32px;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+        }
+        .nav-logo {
+            font-size: 1.25rem;
+            font-weight: 800;
+            color: #1a56db;
+            text-decoration: none;
+            letter-spacing: -0.5px;
+        }
+        .nav-right { display: flex; align-items: center; gap: 12px; }
+        .nav-btn {
+            padding: 8px 18px;
+            border-radius: 8px;
+            font-size: 0.875rem;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.2s;
+        }
+        .nav-btn-outline {
+            border: 1.5px solid #cbd5e1;
+            color: #64748b;
+            background: transparent;
+        }
+        .nav-btn-outline:hover { border-color: #1a56db; color: #1a56db; background: #eff6ff; }
+        .nav-btn-primary { background: #1a56db; color: white; border: none; }
+        .nav-btn-primary:hover { background: #1d4ed8; }
+
+        /* ── LAYOUT ── */
+        .page-wrap {
             max-width: 1200px;
             margin: 0 auto;
+            padding: 32px 24px;
         }
-        .dashboard-grid {
+
+        /* ── WELCOME ── */
+        .welcome-row { margin-bottom: 28px; }
+        .welcome-row h1 {
+            font-size: 1.75rem;
+            font-weight: 800;
+            color: #0f172a;
+            margin-bottom: 4px;
+        }
+        .welcome-row p { color: #64748b; font-size: 0.95rem; }
+
+        /* ── STAT CARDS ── */
+        .stats-row {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 24px;
-            margin-top: 30px;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 16px;
+            margin-bottom: 32px;
         }
-        .enrolled-section {
-            margin-top: 50px;
+        .stat-card {
+            background: #ffffff;
+            border-radius: 14px;
+            padding: 22px 24px;
+            border: 1px solid #e2e8f0;
+            text-align: center;
+            transition: box-shadow 0.2s;
         }
-        .enrolled-section h3 {
-            font-size: 1.6rem;
-            margin-bottom: 24px;
+        .stat-card:hover { box-shadow: 0 4px 16px rgba(0,0,0,0.08); }
+        .stat-card.blue   { border-top: 3px solid #3b82f6; }
+        .stat-card.green  { border-top: 3px solid #22c55e; }
+        .stat-card.amber  { border-top: 3px solid #f59e0b; }
+        .stat-card.purple { border-top: 3px solid #a855f7; }
+        .stat-num {
+            font-size: 2rem;
+            font-weight: 800;
+            color: #0f172a;
+            line-height: 1;
+            margin-bottom: 6px;
         }
-        .enrolled-grid {
+        .stat-card.blue   .stat-num { color: #2563eb; }
+        .stat-card.green  .stat-num { color: #16a34a; }
+        .stat-card.amber  .stat-num { color: #d97706; }
+        .stat-card.purple .stat-num { color: #9333ea; }
+        .stat-label { font-size: 0.8rem; color: #64748b; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; }
+
+        /* ── SECTION TITLE ── */
+        .section-title {
+            font-size: 1.15rem;
+            font-weight: 700;
+            color: #0f172a;
+            margin-bottom: 16px;
+        }
+
+        /* ── QUICK ACTIONS ── */
+        .quick-actions {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 32px;
+            flex-wrap: wrap;
+        }
+        .action-btn {
+            background: #ffffff;
+            border: 1.5px solid #e2e8f0;
+            border-radius: 10px;
+            padding: 12px 20px;
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: #1e293b;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.2s;
+        }
+        .action-btn:hover { border-color: #1a56db; color: #1a56db; background: #eff6ff; box-shadow: 0 2px 8px rgba(26,86,219,0.1); }
+        .action-btn.primary { background: #1a56db; color: white; border-color: #1a56db; }
+        .action-btn.primary:hover { background: #1d4ed8; }
+
+        /* ── COURSE CARDS ── */
+        .courses-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-            gap: 20px;
+            gap: 16px;
         }
-        .course-badge {
-            display: inline-block;
-            background: var(--accent-light);
-            color: var(--accent-primary);
-            font-size: 0.78rem;
+        .course-card {
+            background: #ffffff;
+            border: 1px solid #e2e8f0;
+            border-radius: 14px;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            transition: box-shadow 0.2s, transform 0.2s;
+        }
+        .course-card:hover { box-shadow: 0 6px 20px rgba(0,0,0,0.08); transform: translateY(-2px); }
+        .course-card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 12px;
+        }
+        .enrolled-badge {
+            font-size: 0.7rem;
             font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
             padding: 4px 10px;
             border-radius: 20px;
-            margin-bottom: 12px;
-            letter-spacing: 0.04em;
+            background: #dcfce7;
+            color: #15803d;
+            border: 1px solid #bbf7d0;
+        }
+        .course-num {
+            font-size: 0.78rem;
+            color: #94a3b8;
+            font-weight: 600;
+        }
+        .course-title {
+            font-size: 1.05rem;
+            font-weight: 700;
+            color: #0f172a;
+            margin-bottom: 6px;
+        }
+        .course-meta {
+            font-size: 0.82rem;
+            color: #64748b;
+            margin-bottom: 4px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .course-meta .icon { font-size: 0.9rem; }
+        .progress-wrap { margin: 14px 0 10px; }
+        .progress-bar-bg {
+            background: #e2e8f0;
+            border-radius: 99px;
+            height: 6px;
+            overflow: hidden;
+        }
+        .progress-bar-fill {
+            background: linear-gradient(90deg, #3b82f6, #6366f1);
+            height: 100%;
+            border-radius: 99px;
+            width: 60%;
+        }
+        .progress-label {
+            font-size: 0.75rem;
+            color: #64748b;
+            text-align: right;
+            margin-top: 4px;
+        }
+        .day-pills {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px;
+            margin-bottom: 10px;
+        }
+        .day-pill {
+            font-size: 0.72rem;
+            padding: 2px 9px;
+            border-radius: 20px;
+            background: #eff6ff;
+            color: #2563eb;
+            border: 1px solid #bfdbfe;
+            font-weight: 600;
+        }
+        .time-pill {
+            font-size: 0.72rem;
+            padding: 2px 9px;
+            border-radius: 20px;
+            background: #f5f3ff;
+            color: #7c3aed;
+            border: 1px solid #ddd6fe;
+            font-weight: 600;
+        }
+        .view-link {
+            font-size: 0.82rem;
+            color: #2563eb;
+            font-weight: 600;
+            text-decoration: none;
+            margin-top: auto;
+            padding-top: 10px;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+        }
+        .view-link:hover { text-decoration: underline; }
+
+        /* ── EMPTY ── */
+        .empty-card {
+            background: #ffffff;
+            border: 1px dashed #cbd5e1;
+            border-radius: 14px;
+            padding: 48px 24px;
+            text-align: center;
+        }
+        .empty-card .empty-icon { font-size: 2.5rem; margin-bottom: 12px; }
+        .empty-card h3 { font-size: 1rem; font-weight: 700; color: #475569; margin-bottom: 8px; }
+        .empty-card p { font-size: 0.875rem; color: #94a3b8; margin-bottom: 20px; }
+        .btn-blue {
+            display: inline-block;
+            background: #1a56db;
+            color: white;
+            padding: 10px 24px;
+            border-radius: 8px;
+            font-size: 0.875rem;
+            font-weight: 600;
+            text-decoration: none;
+            transition: background 0.2s;
+        }
+        .btn-blue:hover { background: #1d4ed8; }
+
+        @media (max-width: 768px) {
+            .stats-row { grid-template-columns: repeat(2, 1fr); }
+            .courses-grid { grid-template-columns: 1fr; }
+            .top-nav { padding: 0 16px; }
+            .page-wrap { padding: 20px 16px; }
         }
     </style>
 </head>
 <body>
 
-<nav class="glass-nav">
-    <a href="#" class="logo gradient-text">TBS Student</a>
-    <div class="nav-links">
-        <a th:href="@{/logout}" class="btn-glass">Logout</a>
+<!-- NAV -->
+<nav class="top-nav">
+    <a href="/dashboard/student" class="nav-logo">📚 TutorBook</a>
+    <div class="nav-right">
+        <a th:href="@{/student/courses}" class="nav-btn nav-btn-outline">Browse Courses</a>
+        <a th:href="@{/student/profile}" class="nav-btn nav-btn-outline">My Profile</a>
+        <a th:href="@{/logout}" class="nav-btn nav-btn-primary">Logout</a>
     </div>
 </nav>
 
-<div class="dashboard-container">
-    <h2>Welcome, <span class="gradient-text" th:text="${session.user.name} + '!'">Student!</span></h2>
-    
-    <div class="dashboard-grid">
-        <div class="glass-card">
-            <h3 style="color: var(--accent-blue);">Browse Courses</h3>
-            <p>Find and enroll in available tutoring courses.</p>
-            <div style="margin-top: 20px;">
-                <a th:href="@{/student/courses}" class="btn-premium">View Courses</a>
-            </div>
+<div class="page-wrap">
+
+    <!-- WELCOME -->
+    <div class="welcome-row">
+        <h1>Welcome back, <span th:text="${session.user.name}">Student</span>! 👋</h1>
+        <p>Here's an overview of your enrolled courses.</p>
+    </div>
+
+    <!-- STATS -->
+    <div class="stats-row">
+        <div class="stat-card blue">
+            <div class="stat-num" th:text="${enrolledCourses != null ? enrolledCourses.size() : 0}">0</div>
+            <div class="stat-label">Total Enrolled</div>
         </div>
-        
-        <div class="glass-card">
-            <h3 style="color: var(--accent-purple);">Tutor Directory</h3>
-            <p>View all available tutors.</p>
-            <div style="margin-top: 20px;">
-                <a th:href="@{/tutor/list}" class="btn-premium">Browse Tutors</a>
-            </div>
+        <div class="stat-card green">
+            <div class="stat-num" th:text="${enrolledCourses != null ? enrolledCourses.size() : 0}">0</div>
+            <div class="stat-label">Active Courses</div>
         </div>
-        
-        <div class="glass-card">
-            <h3 style="color: var(--text-main);">My Profile</h3>
-            <p>Update your personal profile details.</p>
-            <div style="margin-top: 20px;">
-                <a th:href="@{/student/profile}" class="btn-glass">Edit Profile</a>
-            </div>
+        <div class="stat-card amber">
+            <div class="stat-num">0</div>
+            <div class="stat-label">Completed</div>
+        </div>
+        <div class="stat-card purple">
+            <div class="stat-num" th:text="${totalCourses != null ? totalCourses : 0}">0</div>
+            <div class="stat-label">Available Courses</div>
         </div>
     </div>
 
-    <!-- Enrolled Courses Section -->
-    <div class="enrolled-section">
-        <h3>📚 My Enrolled <span class="gradient-text">Courses</span></h3>
+    <!-- QUICK ACTIONS -->
+    <div class="section-title">Quick Actions</div>
+    <div class="quick-actions">
+        <a th:href="@{/student/courses}" class="action-btn primary">🔍 Browse Courses</a>
+        <a th:href="@{/tutor/list}" class="action-btn">👨‍🏫 View Tutors</a>
+        <a th:href="@{/student/profile}" class="action-btn">👤 Edit Profile</a>
+    </div>
 
-        <!-- Has enrolled courses -->
-        <div class="enrolled-grid" th:if="${enrolledCourses != null and !#lists.isEmpty(enrolledCourses)}">
-            <div class="glass-card" th:each="course : ${enrolledCourses}" style="display: flex; flex-direction: column;">
-                <span class="course-badge">ENROLLED ✓</span>
-                <h4 style="font-size: 1.15rem; margin-bottom: 8px;" th:text="${course.title}">Course Title</h4>
-                <p style="font-size: 0.9rem; color: var(--text-muted); margin-bottom: 6px;">
-                    👨‍🏫 <span th:text="${course.tutorName ?: 'Unknown Tutor'}">Tutor</span>
-                </p>
-                <p style="font-size: 0.9rem; color: var(--text-muted); flex-grow: 1; margin-bottom: 16px;" th:text="${course.description}">Description</p>
-                <p style="font-weight: 700; color: var(--accent-primary);">$<span th:text="${course.price}">0.00</span></p>
+    <!-- ENROLLED COURSES -->
+    <div class="section-title">📚 My Enrolled Courses</div>
+
+    <!-- Has courses -->
+    <div class="courses-grid" th:if="${enrolledCourses != null and !#lists.isEmpty(enrolledCourses)}">
+        <div class="course-card" th:each="course, iterStat : ${enrolledCourses}">
+            <div class="course-card-header">
+                <span class="enrolled-badge">✓ Enrolled</span>
+                <span class="course-num" th:text="'#' + ${iterStat.count}">#1</span>
             </div>
-        </div>
 
-        <!-- No enrolled courses yet -->
-        <div class="glass-card" th:if="${enrolledCourses == null or #lists.isEmpty(enrolledCourses)}"
-             style="text-align: center; padding: 40px;">
-            <p style="font-size: 1.1rem; color: var(--text-muted);">You haven't enrolled in any courses yet.</p>
-            <a th:href="@{/student/courses}" class="btn-premium" style="margin-top: 20px; display: inline-block;">Browse Courses</a>
+            <div class="course-title" th:text="${course.title}">Course Title</div>
+
+            <div class="course-meta">
+                <span class="icon">👨‍🏫</span>
+                <span th:text="${course.tutorName ?: 'Unknown Tutor'}">Tutor Name</span>
+            </div>
+
+            <div class="course-meta" th:if="${course.sessionTime != null and !course.sessionTime.isEmpty()}">
+                <span class="icon">🕐</span>
+                <span th:text="${course.sessionTime}">10:00</span>
+                <span>· 60 min</span>
+            </div>
+
+            <div class="course-meta">
+                <span class="icon">💰</span>
+                <span>$<span th:text="${course.price}">0.00</span></span>
+            </div>
+
+            <!-- Day Pills -->
+            <div class="day-pills" th:if="${course.availableDays != null and !course.availableDays.isEmpty()}" style="margin-top: 10px;">
+                <span class="day-pill" th:each="day : ${course.availableDays}" th:text="${day.substring(0,3)}">Mon</span>
+                <span class="time-pill" th:if="${course.sessionTime != null and !course.sessionTime.isEmpty()}">
+                    🕐 <span th:text="${course.sessionTime}"></span>
+                </span>
+            </div>
+
+            <!-- Progress -->
+            <div class="progress-wrap">
+                <div class="progress-bar-bg">
+                    <div class="progress-bar-fill"></div>
+                </div>
+                <div class="progress-label">In Progress</div>
+            </div>
+
+            <a th:href="@{/student/courses}" class="view-link">Tap to view all courses →</a>
         </div>
+    </div>
+
+    <!-- No courses -->
+    <div class="empty-card" th:if="${enrolledCourses == null or #lists.isEmpty(enrolledCourses)}">
+        <div class="empty-icon">📖</div>
+        <h3>No courses enrolled yet</h3>
+        <p>Browse available courses and enroll to get started with your learning journey.</p>
+        <a th:href="@{/student/courses}" class="btn-blue">Browse Courses</a>
     </div>
 
 </div>
-
 </body>
 </html>
