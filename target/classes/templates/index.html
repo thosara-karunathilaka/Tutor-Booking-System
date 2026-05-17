@@ -28,6 +28,47 @@
     </div>
 </section>
 
+<!-- Stats Section -->
+<section style="padding: 40px 20px; background-color: var(--bg-card); border-top: 1px solid var(--border-color); border-bottom: 1px solid var(--border-color);">
+    <div style="max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-around; flex-wrap: wrap; text-align: center;">
+        <div style="padding: 20px; min-width: 200px;">
+            <h2 class="gradient-text" style="font-size: 3.5rem; margin-bottom: 10px;" th:text="${tutorCount != null ? tutorCount : '0'}">0</h2>
+            <p style="font-size: 1.1rem; font-weight: 600; color: var(--text-main);">Expert Tutors</p>
+        </div>
+        <div style="padding: 20px; min-width: 200px;">
+            <h2 class="gradient-text" style="font-size: 3.5rem; margin-bottom: 10px;" th:text="${studentCount != null ? studentCount : '0'}">0</h2>
+            <p style="font-size: 1.1rem; font-weight: 600; color: var(--text-main);">Happy Students</p>
+        </div>
+        <div style="padding: 20px; min-width: 200px;">
+            <h2 class="gradient-text" style="font-size: 3.5rem; margin-bottom: 10px;" th:text="${courses != null ? #lists.size(courses) : '0'}">0</h2>
+            <p style="font-size: 1.1rem; font-weight: 600; color: var(--text-main);">Active Courses</p>
+        </div>
+    </div>
+</section>
+
+<!-- Why Choose Us Section -->
+<section style="padding: 80px 20px; max-width: 1200px; margin: 0 auto;">
+    <h2 style="text-align: center; font-size: 2.5rem; margin-bottom: 50px;">Why <span class="gradient-text">Choose Us?</span></h2>
+    
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 40px;">
+        <div class="glass-card" style="text-align: center; padding: 40px 30px;">
+            <div style="font-size: 3rem; margin-bottom: 20px;">🎯</div>
+            <h3 style="font-size: 1.3rem; margin-bottom: 15px;">Personalized Learning</h3>
+            <p>Our tutors tailor their teaching methods to fit your unique learning style and pace.</p>
+        </div>
+        <div class="glass-card" style="text-align: center; padding: 40px 30px;">
+            <div style="font-size: 3rem; margin-bottom: 20px;">💡</div>
+            <h3 style="font-size: 1.3rem; margin-bottom: 15px;">Expert Tutors</h3>
+            <p>Learn from highly qualified professionals with years of experience in their respective fields.</p>
+        </div>
+        <div class="glass-card" style="text-align: center; padding: 40px 30px;">
+            <div style="font-size: 3rem; margin-bottom: 20px;">🕒</div>
+            <h3 style="font-size: 1.3rem; margin-bottom: 15px;">Flexible Scheduling</h3>
+            <p>Book sessions that fit perfectly into your busy lifestyle, available 24/7.</p>
+        </div>
+    </div>
+</section>
+
 <!-- Courses Section -->
 <section style="padding: 60px 20px; max-width: 1200px; margin: 0 auto;">
     <h2 style="text-align: center; font-size: 2.5rem; margin-bottom: 40px;">Available <span class="gradient-text">Courses</span></h2>
