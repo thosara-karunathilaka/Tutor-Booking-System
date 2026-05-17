@@ -118,7 +118,17 @@
                 </span>
             </div>
 
-            <a th:if="${session.role == 'STUDENT'}" th:href="@{'/student/enroll/' + ${course.courseId}}" class="btn-premium" style="width: 100%;">Enroll Now</a>
+            <!-- Enroll button — hidden if already enrolled -->
+            <th:block th:if="${session.role == 'STUDENT'}">
+                <span th:if="${enrolledCourseIds != null and enrolledCourseIds.contains(course.courseId)}"
+                      style="display:block; width:100%; text-align:center; padding:10px 0;
+                             background:#dcfce7; color:#15803d; border-radius:8px;
+                             font-weight:700; font-size:0.88rem; border:1px solid #bbf7d0;">
+                    ✓ Already Enrolled
+                </span>
+                <a th:unless="${enrolledCourseIds != null and enrolledCourseIds.contains(course.courseId)}"
+                   th:href="@{'/student/enroll/' + ${course.courseId}}" class="btn-premium" style="width: 100%;">Enroll Now</a>
+            </th:block>
         </div>
     </div>
 

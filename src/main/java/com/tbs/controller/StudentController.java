@@ -65,7 +65,12 @@ public class StudentController {
     @GetMapping("/courses")
     public String browseCourses(HttpSession session, Model model) {
         if (!"STUDENT".equals(session.getAttribute("role"))) return "redirect:/login";
+        String userId = (String) session.getAttribute("userId");
         model.addAttribute("courses", courseService.getAllCourses());
+        // Pass enrolled course IDs so template can show 'Already Enrolled'
+        java.util.List<String> enrolledIds = courseService.getEnrollmentsByStudent(userId)
+                .stream().map(com.tbs.model.Enrollment::getCourseId).collect(java.util.stream.Collectors.toList());
+        model.addAttribute("enrolledCourseIds", enrolledIds);
         return "student/courses";
     }
 

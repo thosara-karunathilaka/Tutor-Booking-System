@@ -38,8 +38,13 @@ public class CourseService {
     }
 
     public void enrollStudent(String studentId, String courseId) {
-        Enrollment e = new Enrollment(FileHandler.generateNextEnrollmentId(), studentId, courseId);
-        FileHandler.saveEnrollment(e);
+        // Prevent duplicate enrollments — only enroll if not already enrolled
+        boolean alreadyEnrolled = FileHandler.readEnrollments().stream()
+                .anyMatch(e -> e.getStudentId().equals(studentId) && e.getCourseId().equals(courseId));
+        if (!alreadyEnrolled) {
+            Enrollment e = new Enrollment(FileHandler.generateNextEnrollmentId(), studentId, courseId);
+            FileHandler.saveEnrollment(e);
+        }
     }
 
     public void unenrollStudent(String studentId, String courseId) {
