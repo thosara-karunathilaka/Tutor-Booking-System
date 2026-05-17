@@ -109,4 +109,16 @@ public class TutorController {
         model.addAttribute("students", students);
         return "tutor/enrolled-students";
     }
+
+    @PostMapping("/course/{courseId}/delete")
+    public String deleteCourse(@PathVariable String courseId, HttpSession session) {
+        String userId = (String) session.getAttribute("userId");
+        if (userId == null || !"TUTOR".equals(session.getAttribute("role"))) return "redirect:/login";
+        // Safety check: only delete if this tutor owns the course
+        Course course = courseService.getCourseById(courseId);
+        if (course != null && userId.equals(course.getTutorId())) {
+            courseService.deleteCourse(courseId);
+        }
+        return "redirect:/tutor/courses";
+    }
 }

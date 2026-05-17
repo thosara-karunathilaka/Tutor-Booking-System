@@ -28,6 +28,45 @@
             border-radius: 8px;
             margin-bottom: 24px;
         }
+        /* Search bar styles */
+        .search-wrapper {
+            position: relative;
+            margin-bottom: 30px;
+        }
+        .search-icon {
+            position: absolute;
+            left: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-muted);
+            font-size: 1.1rem;
+            pointer-events: none;
+        }
+        #courseSearch {
+            width: 100%;
+            padding: 14px 16px 14px 46px;
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            font-size: 1rem;
+            background: var(--bg-card);
+            color: var(--text-main);
+            box-shadow: var(--shadow-sm);
+            transition: border-color 0.2s ease, box-shadow 0.2s ease;
+            font-family: 'Inter', sans-serif;
+        }
+        #courseSearch:focus {
+            outline: none;
+            border-color: var(--accent-primary);
+            box-shadow: 0 0 0 3px var(--accent-light);
+        }
+        #courseSearch::placeholder {
+            color: var(--text-muted);
+        }
+        .no-results-msg {
+            display: none;
+            text-align: center;
+            padding: 40px;
+        }
     </style>
 </head>
 <body>
@@ -47,20 +86,54 @@
     <div th:if="${param.enrolled}" class="alert-success">
         You have successfully enrolled in the course!
     </div>
+
+    <!-- Search Bar -->
+    <div class="search-wrapper">
+        <span class="search-icon">🔍</span>
+        <input type="text" id="courseSearch" placeholder="Search by course title, instructor, or description..." autocomplete="off">
+    </div>
     
-    <div class="courses-grid">
-        <div class="glass-card" th:each="course : ${courses}" style="display: flex; flex-direction: column;">
-            <h3 style="color: var(--accent-purple);" th:text="${course.title}"></h3>
-            <p style="font-size: 0.9em; color: var(--text-muted); margin-top: 5px;">Instructor: <span th:text="${course.tutorName}"></span></p>
-            <p style="flex-grow: 1; margin: 15px 0;" th:text="${course.description}"></p>
+    <div class="courses-grid" id="coursesGrid">
+        <div class="glass-card course-card" th:each="course : ${courses}" style="display: flex; flex-direction: column;">
+            <h3 class="course-title" style="color: var(--accent-purple);" th:text="${course.title}"></h3>
+            <p class="course-instructor" style="font-size: 0.9em; color: var(--text-muted); margin-top: 5px;">Instructor: <span th:text="${course.tutorName}"></span></p>
+            <p class="course-description" style="flex-grow: 1; margin: 15px 0;" th:text="${course.description}"></p>
             <p style="font-weight: 600; color: var(--text-main); margin-bottom: 20px;">Price: $<span th:text="${course.price}"></span></p>
             <a th:if="${session.role == 'STUDENT'}" th:href="@{'/student/enroll/' + ${course.courseId}}" class="btn-premium" style="width: 100%;">Enroll Now</a>
         </div>
+    </div>
+
+    <!-- No results message -->
+    <div class="glass-card no-results-msg" id="noResultsMsg" style="text-align: center; padding: 40px;">
+        <h3 style="color: var(--text-muted);">😕 No courses match your search. Try a different keyword!</h3>
     </div>
     
     <div class="glass-card" th:if="${#lists.isEmpty(courses)}" style="text-align: center; padding: 40px;">
         <h3 style="color: var(--text-muted);">No courses are currently available. Check back later!</h3>
     </div>
 </div>
+
+<script>
+    document.getElementById('courseSearch').addEventListener('input', function () {
+        const query = this.value.toLowerCase().trim();
+        const cards = document.querySelectorAll('.course-card');
+        let visibleCount = 0;
+
+        cards.forEach(function (card) {
+            const title = card.querySelector('.course-title')?.textContent.toLowerCase() || '';
+            const instructor = card.querySelector('.course-instructor')?.textContent.toLowerCase() || '';
+            const description = card.querySelector('.course-description')?.textContent.toLowerCase() || '';
+
+            if (title.includes(query) || instructor.includes(query) || description.includes(query)) {
+                card.style.display = 'flex';
+                visibleCount++;
+            } else {
+                card.style.display = 'none';
+            }
+        });
+
+        document.getElementById('noResultsMsg').style.display = visibleCount === 0 ? 'block' : 'none';
+    });
+</script>
 </body>
 </html>

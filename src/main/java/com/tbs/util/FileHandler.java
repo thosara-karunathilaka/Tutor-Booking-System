@@ -266,6 +266,25 @@ public class FileHandler {
         } catch (IOException e) {}
     }
 
+    public static void overwriteCourses(List<Course> courses) {
+        try (BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(COURSE_FILE, false), StandardCharsets.UTF_8))) {
+            for (Course course : courses) {
+                String safeTitle = course.getTitle() != null ? course.getTitle().replace(",", "%2C") : "";
+                String safeDesc = course.getDescription() != null ? course.getDescription().replace(",", "%2C") : "";
+                writer.write(String.join(",", course.getCourseId(), course.getTutorId(), safeTitle, safeDesc, String.valueOf(course.getPrice())));
+                writer.newLine();
+            }
+        } catch (IOException e) {
+            throw new IllegalStateException("Error writing courses", e);
+        }
+    }
+
+    public static void deleteCourse(String courseId) {
+        List<Course> courses = readCourses();
+        courses.removeIf(c -> c.getCourseId().equals(courseId));
+        overwriteCourses(courses);
+    }
+
     public static List<Course> readCourses() {
         List<Course> list = new ArrayList<>();
         try (BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(COURSE_FILE), StandardCharsets.UTF_8))) {

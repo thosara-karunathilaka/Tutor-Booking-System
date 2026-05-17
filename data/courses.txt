@@ -1,2 +1,2 @@
 C001,U010,Science,Science is a systematic process of gathering knowledge about the physical and natural world through observation%2C experimentation%2C and testing. It is a global endeavor that refines understanding of the universe to develop new technologies%2C treat diseases%2C and solve problems,200.0
-C002,U007,science,123,200.0
+C003,U010,Mathematics,Full A/L maths Sinhala ,20.0
