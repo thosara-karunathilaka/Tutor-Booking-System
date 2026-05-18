@@ -1,11 +1,17 @@
 com\tbs\model\User.class
 com\tbs\service\AuthService.class
+com\tbs\config\WebConfig.class
+com\tbs\interceptor\AuthInterceptor.class
 com\tbs\scratch\Test.class
 com\tbs\controller\AuthController.class
 com\tbs\util\FileHandler.class
+com\tbs\model\Course.class
+com\tbs\service\CourseService.class
 com\tbs\controller\HomeController.class
 com\tbs\service\TutorService.class
+com\tbs\model\Enrollment.class
 com\tbs\TutorBookingSystemApplication.class
+com\tbs\controller\AdminController.class
 com\tbs\controller\TutorController.class
 com\tbs\model\Student.class
 com\tbs\controller\StudentController.class

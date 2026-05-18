@@ -70,4 +70,8 @@ public class CourseService {
     public List<Enrollment> getEnrollmentsByStudent(String studentId) {
         return FileHandler.readEnrollments().stream().filter(e -> e.getStudentId().equals(studentId)).collect(Collectors.toList());
     }
+
+    public void sendClassLink(String studentId, String courseId, String link) {
+        FileHandler.sendClassLink(studentId, courseId, link);
+    }
 }

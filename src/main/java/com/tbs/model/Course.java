@@ -14,7 +14,9 @@ public class Course {
     private double price;
     private String tutorName;
     private List<String> availableDays;
-    private String sessionTime;
+    private String sessionTime; // kept for backward compatibility
+    private String startTime;   // e.g. "09:00"
+    private String endTime;     // e.g. "10:30"
 
     public Course(String courseId, String tutorId, String title, String description, double price) {
         this.courseId = courseId;

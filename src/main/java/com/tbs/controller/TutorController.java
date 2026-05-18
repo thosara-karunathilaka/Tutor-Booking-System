@@ -112,14 +112,21 @@ public class TutorController {
         List<Enrollment> enrollments = courseService.getEnrollmentsByCourse(courseId);
         List<Student> students = enrollments.stream()
                 .map(e -> studentService.getStudentById(e.getStudentId()))
+                .filter(java.util.Objects::nonNull)
                 .collect(Collectors.toList());
-        // Build a map of studentId -> status so the template knows who is completed
+        // Build studentId -> status map
         java.util.Map<String, String> statusMap = new java.util.HashMap<>();
+        // Build studentId -> classLink map
+        java.util.Map<String, String> classLinkMap = new java.util.HashMap<>();
         for (Enrollment e : enrollments) {
             statusMap.put(e.getStudentId(), e.getStatus() != null ? e.getStatus() : "ACTIVE");
+            if (e.getClassLink() != null && !e.getClassLink().isBlank()) {
+                classLinkMap.put(e.getStudentId(), e.getClassLink());
+            }
         }
         model.addAttribute("students", students);
         model.addAttribute("statusMap", statusMap);
+        model.addAttribute("classLinkMap", classLinkMap);
         model.addAttribute("courseId", courseId);
         long completedStudentCount = statusMap.values().stream().filter("COMPLETED"::equals).count();
         model.addAttribute("completedStudentCount", completedStudentCount);
@@ -133,6 +140,17 @@ public class TutorController {
         if (!"TUTOR".equals(session.getAttribute("role")))
             return "redirect:/login";
         courseService.completeEnrollment(studentId, courseId);
+        return "redirect:/tutor/course/" + courseId + "/students";
+    }
+
+    @PostMapping("/course/{courseId}/sendlink/{studentId}")
+    public String sendClassLink(@PathVariable String courseId,
+                                @PathVariable String studentId,
+                                @org.springframework.web.bind.annotation.RequestParam String classLink,
+                                HttpSession session) {
+        if (!"TUTOR".equals(session.getAttribute("role")))
+            return "redirect:/login";
+        courseService.sendClassLink(studentId, courseId, classLink);
         return "redirect:/tutor/course/" + courseId + "/students";
     }
 

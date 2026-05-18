@@ -318,27 +318,13 @@ public class FileHandler {
         // Cascade: remove all enrollments that reference this course
         List<Enrollment> enrollments = readEnrollments();
         enrollments.removeIf(e -> e.getCourseId().equals(courseId));
-        try (BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(ENROLLMENT_FILE, false), StandardCharsets.UTF_8))) {
-            for (Enrollment e : enrollments) {
-                writer.write(String.join(",", e.getEnrollmentId(), e.getStudentId(), e.getCourseId()));
-                writer.newLine();
-            }
-        } catch (IOException e) {
-            throw new IllegalStateException("Error rewriting enrollments after course delete", e);
-        }
+        overwriteEnrollments(enrollments);
     }
 
     public static void deleteEnrollment(String studentId, String courseId) {
         List<Enrollment> enrollments = readEnrollments();
         enrollments.removeIf(e -> e.getStudentId().equals(studentId) && e.getCourseId().equals(courseId));
-        try (BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(ENROLLMENT_FILE, false), StandardCharsets.UTF_8))) {
-            for (Enrollment e : enrollments) {
-                writer.write(String.join(",", e.getEnrollmentId(), e.getStudentId(), e.getCourseId()));
-                writer.newLine();
-            }
-        } catch (IOException e) {
-            throw new IllegalStateException("Error writing enrollments", e);
-        }
+        overwriteEnrollments(enrollments);
     }
 
     public static List<Course> readCourses() {
@@ -350,13 +336,21 @@ public class FileHandler {
                 String[] d = line.split(",");
                 if (d.length >= 5) {
                     Course c = new Course(d[0], d[1], d[2].replace("%2C", ","), d[3].replace("%2C", ","), Double.parseDouble(d[4]));
-                    // field[5] = pipe-separated availableDays, field[6] = sessionTime
+                    // field[5] = pipe-separated availableDays
                     if (d.length >= 6 && !d[5].isBlank()) {
                         List<String> days = new ArrayList<>(Arrays.asList(d[5].split("\\|")));
                         c.setAvailableDays(days);
                     }
+                    // field[6] = sessionTime (legacy — keep for display)
                     if (d.length >= 7 && !d[6].isBlank()) {
                         c.setSessionTime(d[6]);
+                    }
+                    // field[7] = startTime, field[8] = endTime
+                    if (d.length >= 8 && !d[7].isBlank()) {
+                        c.setStartTime(d[7]);
+                    }
+                    if (d.length >= 9 && !d[8].isBlank()) {
+                        c.setEndTime(d[8]);
                     }
                     list.add(c);
                 }
@@ -368,7 +362,8 @@ public class FileHandler {
     public static void saveEnrollment(Enrollment enrollment) {
         try (BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(ENROLLMENT_FILE, true), StandardCharsets.UTF_8))) {
             String status = enrollment.getStatus() != null ? enrollment.getStatus() : "ACTIVE";
-            writer.write(String.join(",", enrollment.getEnrollmentId(), enrollment.getStudentId(), enrollment.getCourseId(), status));
+            String link = enrollment.getClassLink() != null ? enrollment.getClassLink().replace(",", "%2C") : "";
+            writer.write(String.join(",", enrollment.getEnrollmentId(), enrollment.getStudentId(), enrollment.getCourseId(), status, link));
             writer.newLine();
         } catch (IOException e) {}
     }
@@ -383,7 +378,9 @@ public class FileHandler {
                 if (d.length >= 3) {
                     // field[3] = status (backward-compatible — default ACTIVE if missing)
                     String status = d.length >= 4 ? d[3].trim() : "ACTIVE";
-                    list.add(new Enrollment(d[0], d[1], d[2], status));
+                    // field[4] = classLink (optional)
+                    String classLink = d.length >= 5 && !d[4].isBlank() ? d[4].trim().replace("%2C", ",") : null;
+                    list.add(new Enrollment(d[0], d[1], d[2], status, classLink));
                 }
             }
         } catch (IOException e) {}
@@ -398,15 +395,30 @@ public class FileHandler {
                 break;
             }
         }
-        // Rewrite all enrollments with updated status
+        overwriteEnrollments(enrollments);
+    }
+
+    public static void sendClassLink(String studentId, String courseId, String link) {
+        List<Enrollment> enrollments = readEnrollments();
+        for (Enrollment e : enrollments) {
+            if (e.getStudentId().equals(studentId) && e.getCourseId().equals(courseId)) {
+                e.setClassLink(link);
+                break;
+            }
+        }
+        overwriteEnrollments(enrollments);
+    }
+
+    public static void overwriteEnrollments(List<Enrollment> enrollments) {
         try (BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(ENROLLMENT_FILE, false), StandardCharsets.UTF_8))) {
             for (Enrollment e : enrollments) {
                 String status = e.getStatus() != null ? e.getStatus() : "ACTIVE";
-                writer.write(String.join(",", e.getEnrollmentId(), e.getStudentId(), e.getCourseId(), status));
+                String link = e.getClassLink() != null ? e.getClassLink().replace(",", "%2C") : "";
+                writer.write(String.join(",", e.getEnrollmentId(), e.getStudentId(), e.getCourseId(), status, link));
                 writer.newLine();
             }
         } catch (IOException ex) {
-            throw new IllegalStateException("Error updating enrollment status", ex);
+            throw new IllegalStateException("Error updating enrollments", ex);
         }
     }
 
@@ -416,8 +428,10 @@ public class FileHandler {
         String days = (course.getAvailableDays() != null && !course.getAvailableDays().isEmpty())
                 ? String.join("|", course.getAvailableDays()) : "";
         String time = course.getSessionTime() != null ? course.getSessionTime() : "";
+        String startTime = course.getStartTime() != null ? course.getStartTime() : "";
+        String endTime = course.getEndTime() != null ? course.getEndTime() : "";
         return String.join(",", course.getCourseId(), course.getTutorId(), safeTitle, safeDesc,
-                String.valueOf(course.getPrice()), days, time);
+                String.valueOf(course.getPrice()), days, time, startTime, endTime);
     }
 
     private static String toUserRecord(User user) {

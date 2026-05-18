@@ -1,2 +1,2 @@
-C004,U011,Sinhala,Sinhala lit,200.0,,
-C005,U010,Intro python,123,123.0,Monday,03:02
+C005,U010,introduction for python,Python is a high-level%2C interpreted programming language known for its simplicity and readability. Created by Guido van Rossum and released in 1991%2C it was designed to be easy to learn and versatile enough to handle everything from simple scripts to complex artificial intelligence,2000.0,Monday|Tuesday|Wednesday|Thursday|Friday|Saturday|Sunday,,14:00,15:00
+C006,U011,Spoken English,To practice your spoken English effectively%2C you must transition from passive listening to active speaking. The most successful way to build fluency is to combine solo practice techniques with interactive tools.,3000.0,Monday|Tuesday|Wednesday,,20:00,21:00

@@ -1,5 +1,5 @@
 U007,dedunu,dedunu jayathilaka,dedunufiverr@gmail.com,123,TUTOR,N/A,0,0.0
 U008,teacher1,teacher teacher,teacher1@gmail.com,123,TUTOR,N/A,0,0.0
-U010,beam,Beam samarasooriya,beamsamarasooriya@gmail.com,123,TUTOR,N/A,0,0.0
+U010,beam,Beam samarasooriya,beamsamarasooriya@gmail.com,123,TUTOR,Software Engineer,4,2000.0
 U011,pasindu,Pasindu gunathilaka,pasindu@gmail.com,123,TUTOR,Sinahala,5,50.0
 U012,pasindu,Pasindu,pasindu@tutor.com,1234,TUTOR,N/A,0,0.0

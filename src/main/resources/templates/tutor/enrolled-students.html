@@ -70,6 +70,14 @@
         }
         .btn-complete:hover { background: #1d4ed8; }
 
+        .btn-send-link {
+            padding: 8px 16px; border-radius: 8px; font-size: 0.82rem; font-weight: 600;
+            background: #eff6ff; color: #2563eb; border: 1.5px solid #bfdbfe; cursor: pointer;
+            font-family: 'Inter', sans-serif; transition: all 0.2s;
+            display: inline-block;
+        }
+        .btn-send-link:hover { background: #dbeafe; border-color: #93c5fd; }
+
         .completed-label {
             font-size: 0.82rem; font-weight: 600; color: #15803d;
             display: flex; align-items: center; gap: 4px;
@@ -120,10 +128,10 @@
 
     <!-- Student cards -->
     <div th:each="student : ${students}">
-        <div class="student-card" th:classappend="${statusMap[student.userId] == 'COMPLETED'} ? 'completed' : ''">
+        <div class="student-card" th:classappend="${statusMap.get(student.userId) == 'COMPLETED'} ? 'completed' : ''">
             <div class="student-info">
                 <div class="student-avatar"
-                     th:classappend="${statusMap[student.userId] == 'COMPLETED'} ? ' done' : ''"
+                     th:classappend="${statusMap.get(student.userId) == 'COMPLETED'} ? ' done' : ''"
                      th:text="${student.name != null ? student.name.substring(0,1).toUpperCase() : '?'}">A</div>
                 <div>
                     <div class="student-name" th:text="${student.name}">Student Name</div>
@@ -139,18 +147,31 @@
             <div class="student-right">
                 <!-- Status badge -->
                 <span class="status-badge"
-                      th:classappend="${statusMap[student.userId] == 'COMPLETED'} ? 'badge-completed' : 'badge-active'"
-                      th:text="${statusMap[student.userId] == 'COMPLETED'} ? '✓ Completed' : 'Active'">Active</span>
+                      th:classappend="${statusMap.get(student.userId) == 'COMPLETED'} ? 'badge-completed' : 'badge-active'"
+                      th:text="${statusMap.get(student.userId) == 'COMPLETED'} ? '✓ Completed' : 'Active'">Active</span>
 
                 <!-- Complete button (only if not already completed) -->
-                <form th:if="${statusMap[student.userId] != 'COMPLETED'}"
+                <form th:if="${statusMap.get(student.userId) != 'COMPLETED'}"
                       th:action="@{'/tutor/course/' + ${courseId} + '/complete/' + ${student.userId}}"
                       method="post"
-                      onsubmit="return confirm('Mark this student as completed for this course?')">
+                      onsubmit="return confirm('Mark this student as completed for this course?')"
+                      style="display: inline-block;">
                     <button type="submit" class="btn-complete">✅ Mark Complete</button>
                 </form>
 
-                <span th:if="${statusMap[student.userId] == 'COMPLETED'}" class="completed-label">
+                <!-- Send Link button (only if not already completed) -->
+                <form th:if="${statusMap.get(student.userId) != 'COMPLETED'}"
+                      th:action="@{'/tutor/course/' + ${courseId} + '/sendlink/' + ${student.userId}}"
+                      method="post"
+                      style="display: inline-block; margin-left: 8px;">
+                    <input type="hidden" name="classLink" th:id="'link-field-' + ${student.userId}" th:value="${classLinkMap.get(student.userId)}" />
+                    <button type="button" class="btn-send-link" th:data-student-id="${student.userId}" onclick="sendClassLinkPrompt(this.getAttribute('data-student-id'))"
+                            th:text="${classLinkMap.get(student.userId) != null} ? '🔗 Update Link' : '🔗 Send Link'">
+                        🔗 Send Link
+                    </button>
+                </form>
+
+                <span th:if="${statusMap.get(student.userId) == 'COMPLETED'}" class="completed-label">
                     🎉 Done
                 </span>
             </div>
@@ -162,5 +183,17 @@
         <p>No students have enrolled in this course yet.</p>
     </div>
 </div>
+
+<script>
+    function sendClassLinkPrompt(studentId) {
+        const inputField = document.getElementById('link-field-' + studentId);
+        const existingLink = inputField.value || '';
+        const newLink = prompt("Enter the Class/Zoom Link for this student:", existingLink);
+        if (newLink !== null) {
+            inputField.value = newLink;
+            inputField.parentElement.submit();
+        }
+    }
+</script>
 </body>
 </html>

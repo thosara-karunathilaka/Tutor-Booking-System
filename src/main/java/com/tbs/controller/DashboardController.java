@@ -60,13 +60,19 @@ public class DashboardController {
                 .collect(Collectors.toList());
         // Build courseId -> status map
         java.util.Map<String, String> enrollmentStatuses = new java.util.HashMap<>();
+        // Build courseId -> classLink map
+        java.util.Map<String, String> classLinkMap = new java.util.HashMap<>();
         for (com.tbs.model.Enrollment e : enrollments) {
             enrollmentStatuses.put(e.getCourseId(), e.getStatus() != null ? e.getStatus() : "ACTIVE");
+            if (e.getClassLink() != null && !e.getClassLink().isBlank()) {
+                classLinkMap.put(e.getCourseId(), e.getClassLink());
+            }
         }
         long completedCount = enrollmentStatuses.values().stream().filter("COMPLETED"::equals).count();
         long activeCount = enrollmentStatuses.values().stream().filter("ACTIVE"::equals).count();
         model.addAttribute("enrolledCourses", enrolledCourses);
         model.addAttribute("enrollmentStatuses", enrollmentStatuses);
+        model.addAttribute("classLinkMap", classLinkMap);
         model.addAttribute("completedCount", completedCount);
         model.addAttribute("activeCount", activeCount);
         model.addAttribute("totalCourses", courseService.getAllCourses().size());

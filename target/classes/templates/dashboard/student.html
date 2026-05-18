@@ -242,9 +242,7 @@
             display: inline-flex;
             align-items: center;
             gap: 4px;
-        }
-        .view-link:hover { text-decoration: underline; }
-        .btn-remove {
+        }         .btn-remove {
             display: block;
             width: 100%;
             margin-top: 10px;
@@ -260,6 +258,30 @@
             transition: all 0.2s;
         }
         .btn-remove:hover { background: #fee2e2; border-color: #fca5a5; }
+        .btn-join-class {
+            display: block;
+            width: 100%;
+            margin-top: 10px;
+            padding: 10px 16px;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            font-weight: 700;
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            color: white;
+            border: none;
+            cursor: pointer;
+            text-align: center;
+            text-decoration: none;
+            transition: all 0.2s ease;
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.2);
+        }
+        .btn-join-class:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 6px 16px rgba(16, 185, 129, 0.35);
+            background: linear-gradient(135deg, #059669 0%, #047857 100%);
+            color: white;
+        }
         .alert-removed {
             background: #dcfce7;
             border: 1px solid #bbf7d0;
@@ -386,7 +408,11 @@
                 <span th:text="${course.tutorName ?: 'Unknown Tutor'}">Tutor Name</span>
             </div>
 
-            <div class="course-meta" th:if="${course.sessionTime != null and !course.sessionTime.isEmpty()}">
+            <div class="course-meta" th:if="${course.startTime != null and !course.startTime.isEmpty()}">
+                <span class="icon">🕐</span>
+                <span th:text="${course.startTime}">09:00</span> - <span th:text="${course.endTime}">10:30</span>
+            </div>
+            <div class="course-meta" th:unless="${course.startTime != null and !course.startTime.isEmpty() or course.sessionTime == null or course.sessionTime.isEmpty()}">
                 <span class="icon">🕐</span>
                 <span th:text="${course.sessionTime}">10:00</span>
                 <span>· 60 min</span>
@@ -400,7 +426,10 @@
             <!-- Day Pills -->
             <div class="day-pills" th:if="${course.availableDays != null and !course.availableDays.isEmpty()}" style="margin-top: 10px;">
                 <span class="day-pill" th:each="day : ${course.availableDays}" th:text="${day.substring(0,3)}">Mon</span>
-                <span class="time-pill" th:if="${course.sessionTime != null and !course.sessionTime.isEmpty()}">
+                <span class="time-pill" th:if="${course.startTime != null and !course.startTime.isEmpty()}">
+                    🕐 <span th:text="${course.startTime}"></span> - <span th:text="${course.endTime}"></span>
+                </span>
+                <span class="time-pill" th:unless="${course.startTime != null and !course.startTime.isEmpty() or course.sessionTime == null or course.sessionTime.isEmpty()}">
                     🕐 <span th:text="${course.sessionTime}"></span>
                 </span>
             </div>
@@ -409,17 +438,25 @@
             <div class="progress-wrap">
                 <div class="progress-bar-bg">
                     <div th:if="${enrollmentStatuses != null and enrollmentStatuses[course.courseId] == 'COMPLETED'}"
-                         class="progress-bar-fill" style="width:100%; background: linear-gradient(90deg,#22c55e,#16a34a);"></div>
+                          class="progress-bar-fill" style="width:100%; background: linear-gradient(90deg,#22c55e,#16a34a);"></div>
                     <div th:unless="${enrollmentStatuses != null and enrollmentStatuses[course.courseId] == 'COMPLETED'}"
-                         class="progress-bar-fill"></div>
+                          class="progress-bar-fill"></div>
                 </div>
                 <div class="progress-label"
-                     th:text="${enrollmentStatuses != null and enrollmentStatuses[course.courseId] == 'COMPLETED'} ? '✓ Completed' : 'In Progress'">
+                      th:text="${enrollmentStatuses != null and enrollmentStatuses[course.courseId] == 'COMPLETED'} ? '✓ Completed' : 'In Progress'">
                     In Progress
                 </div>
             </div>
 
-            <a th:href="@{/student/courses}" class="view-link">Tap to view all courses →</a>
+            <a th:href="@{/student/courses}" class="view-link" style="margin-bottom: 8px;">Tap to view all courses →</a>
+
+            <!-- Join Class button (if link provided and not completed) -->
+            <a th:if="${enrollmentStatuses != null and enrollmentStatuses.get(course.courseId) != 'COMPLETED' and classLinkMap != null and classLinkMap.get(course.courseId) != null}"
+               th:href="${classLinkMap.get(course.courseId)}"
+               target="_blank"
+               class="btn-join-class">
+                🚀 Join Class
+            </a>
 
             <!-- Remove enrollment — only shown if NOT completed -->
             <form th:unless="${enrollmentStatuses != null and enrollmentStatuses[course.courseId] == 'COMPLETED'}"
