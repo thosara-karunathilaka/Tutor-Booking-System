@@ -3,105 +3,689 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tutor Booking System</title>
+    <meta name="description" content="TutorBook – Find and book expert tutors online. Master new subjects with personalized sessions, flexible scheduling, and top-rated professionals.">
+    <title>TutorBook – Find the Best Tutors Online</title>
     <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        /* ── Landing-page scoped styles ─────────────────────────────── */
+
+        /* Hero */
+        .hero {
+            min-height: 92vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 80px 24px 60px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background:
+                radial-gradient(ellipse 80% 60% at 50% -10%, rgba(79,70,229,0.12) 0%, transparent 60%),
+                radial-gradient(ellipse 50% 40% at 80% 80%, rgba(139,92,246,0.08) 0%, transparent 60%);
+            pointer-events: none;
+        }
+
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(79,70,229,0.08);
+            border: 1px solid rgba(79,70,229,0.2);
+            color: var(--accent-primary);
+            font-size: 0.82rem;
+            font-weight: 600;
+            padding: 6px 16px;
+            border-radius: 100px;
+            margin-bottom: 32px;
+            letter-spacing: 0.03em;
+            text-transform: uppercase;
+        }
+
+        .hero-badge span { font-size: 1rem; }
+
+        .hero h1 {
+            font-size: clamp(2.8rem, 6vw, 5rem);
+            font-weight: 900;
+            line-height: 1.1;
+            letter-spacing: -0.03em;
+            margin-bottom: 24px;
+            color: var(--text-main);
+        }
+
+        .hero p {
+            font-size: clamp(1rem, 2vw, 1.25rem);
+            color: var(--text-muted);
+            max-width: 600px;
+            margin: 0 auto 40px;
+            line-height: 1.7;
+        }
+
+        .hero-actions {
+            display: flex;
+            gap: 16px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .btn-hero-primary {
+            background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+            color: white;
+            padding: 15px 36px;
+            border-radius: 12px;
+            font-weight: 700;
+            font-size: 1rem;
+            text-decoration: none;
+            display: inline-block;
+            box-shadow: 0 8px 24px rgba(79,70,229,0.35);
+            transition: all 0.25s ease;
+            letter-spacing: -0.01em;
+        }
+
+        .btn-hero-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 32px rgba(79,70,229,0.45);
+            color: white;
+        }
+
+        .btn-hero-secondary {
+            background: white;
+            color: var(--text-main);
+            border: 1.5px solid var(--border-color);
+            padding: 15px 36px;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 1rem;
+            text-decoration: none;
+            display: inline-block;
+            transition: all 0.25s ease;
+        }
+
+        .btn-hero-secondary:hover {
+            border-color: var(--accent-primary);
+            color: var(--accent-primary);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+            transform: translateY(-2px);
+        }
+
+        /* Floating decorative blobs */
+        .blob {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(60px);
+            opacity: 0.18;
+            pointer-events: none;
+            animation: float 8s ease-in-out infinite;
+        }
+
+        .blob-1 {
+            width: 380px; height: 380px;
+            background: #4f46e5;
+            top: -100px; right: -60px;
+        }
+
+        .blob-2 {
+            width: 280px; height: 280px;
+            background: #8b5cf6;
+            bottom: 40px; left: -80px;
+            animation-delay: -4s;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50%       { transform: translateY(-20px); }
+        }
+
+        /* Stats bar */
+        .stats-bar {
+            background: white;
+            border-top: 1px solid var(--border-color);
+            border-bottom: 1px solid var(--border-color);
+            padding: 48px 24px;
+        }
+
+        .stats-inner {
+            max-width: 900px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 24px;
+        }
+
+        .stat-item {
+            text-align: center;
+            padding: 24px 16px;
+        }
+
+        .stat-item + .stat-item {
+            border-left: 1px solid var(--border-color);
+        }
+
+        .stat-number {
+            font-size: 3.2rem;
+            font-weight: 900;
+            letter-spacing: -0.04em;
+            background: linear-gradient(135deg, #4f46e5 0%, #8b5cf6 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            line-height: 1;
+            margin-bottom: 8px;
+            display: block;
+        }
+
+        .stat-label {
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: var(--text-muted);
+            letter-spacing: 0.01em;
+        }
+
+        /* Features */
+        .section {
+            padding: 96px 24px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .section-tag {
+            display: inline-block;
+            background: rgba(79,70,229,0.08);
+            color: var(--accent-primary);
+            font-size: 0.78rem;
+            font-weight: 700;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            padding: 5px 14px;
+            border-radius: 100px;
+            margin-bottom: 16px;
+        }
+
+        .section-title {
+            font-size: clamp(2rem, 4vw, 2.8rem);
+            font-weight: 800;
+            letter-spacing: -0.03em;
+            text-align: center;
+            margin-bottom: 16px;
+        }
+
+        .section-subtitle {
+            text-align: center;
+            color: var(--text-muted);
+            font-size: 1.05rem;
+            max-width: 540px;
+            margin: 0 auto 64px;
+            line-height: 1.7;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 28px;
+        }
+
+        .feature-card {
+            background: white;
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            padding: 40px 32px;
+            text-align: center;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .feature-card::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, rgba(79,70,229,0.04) 0%, transparent 60%);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 20px 48px rgba(0,0,0,0.1);
+            border-color: rgba(79,70,229,0.2);
+        }
+
+        .feature-card:hover::before { opacity: 1; }
+
+        .feature-icon {
+            width: 68px;
+            height: 68px;
+            background: linear-gradient(135deg, rgba(79,70,229,0.1) 0%, rgba(139,92,246,0.1) 100%);
+            border-radius: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            margin: 0 auto 24px;
+            transition: transform 0.3s ease;
+        }
+
+        .feature-card:hover .feature-icon { transform: scale(1.1) rotate(-5deg); }
+
+        .feature-card h3 {
+            font-size: 1.2rem;
+            font-weight: 700;
+            margin-bottom: 12px;
+            color: var(--text-main);
+        }
+
+        .feature-card p {
+            font-size: 0.95rem;
+            color: var(--text-muted);
+            line-height: 1.7;
+        }
+
+        /* Courses */
+        .courses-section {
+            background: #f8fafc;
+            padding: 96px 24px;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .courses-inner {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .courses-header {
+            display: flex;
+            align-items: flex-end;
+            justify-content: space-between;
+            margin-bottom: 48px;
+            flex-wrap: wrap;
+            gap: 16px;
+        }
+
+        .courses-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 28px;
+        }
+
+        .course-card {
+            background: white;
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .course-card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 20px 48px rgba(0,0,0,0.09);
+            border-color: rgba(79,70,229,0.15);
+        }
+
+        .course-color-bar {
+            height: 5px;
+            background: linear-gradient(90deg, #4f46e5 0%, #8b5cf6 100%);
+        }
+
+        .course-body {
+            padding: 28px;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .course-title {
+            font-size: 1.15rem;
+            font-weight: 700;
+            color: var(--text-main);
+            margin-bottom: 14px;
+            line-height: 1.35;
+        }
+
+        .course-meta {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-bottom: 16px;
+            flex: 1;
+        }
+
+        .course-meta-row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.88rem;
+            color: var(--text-muted);
+        }
+
+        .course-meta-row .icon {
+            font-size: 1rem;
+            flex-shrink: 0;
+        }
+
+        .course-meta-row strong {
+            color: var(--text-main);
+            font-weight: 600;
+        }
+
+        .course-desc {
+            font-size: 0.88rem;
+            color: var(--text-muted);
+            line-height: 1.6;
+            margin-bottom: 20px;
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .course-footer {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding-top: 18px;
+            border-top: 1px solid var(--border-color);
+            margin-top: auto;
+        }
+
+        .course-price {
+            font-size: 1.2rem;
+            font-weight: 800;
+            color: var(--accent-primary);
+            letter-spacing: -0.02em;
+        }
+
+        .course-price span {
+            font-size: 0.78rem;
+            font-weight: 500;
+            color: var(--text-muted);
+            margin-left: 2px;
+        }
+
+        .btn-enroll {
+            background: var(--accent-primary);
+            color: white;
+            padding: 10px 22px;
+            border-radius: 10px;
+            font-size: 0.88rem;
+            font-weight: 700;
+            text-decoration: none;
+            transition: all 0.2s ease;
+            white-space: nowrap;
+        }
+
+        .btn-enroll:hover {
+            background: #4338ca;
+            transform: translateY(-1px);
+            color: white;
+            box-shadow: 0 4px 12px rgba(79,70,229,0.35);
+        }
+
+        /* Empty state */
+        .empty-state {
+            text-align: center;
+            padding: 80px 24px;
+        }
+
+        .empty-state .empty-icon {
+            font-size: 4rem;
+            margin-bottom: 20px;
+            display: block;
+            opacity: 0.5;
+        }
+
+        .empty-state p {
+            font-size: 1rem;
+            color: var(--text-muted);
+        }
+
+        /* Testimonial / CTA Banner */
+        .cta-banner {
+            background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+            padding: 80px 24px;
+            text-align: center;
+        }
+
+        .cta-banner h2 {
+            font-size: clamp(1.8rem, 4vw, 2.6rem);
+            font-weight: 800;
+            color: white;
+            letter-spacing: -0.03em;
+            margin-bottom: 16px;
+        }
+
+        .cta-banner p {
+            color: rgba(255,255,255,0.75);
+            font-size: 1.05rem;
+            max-width: 500px;
+            margin: 0 auto 36px;
+            line-height: 1.7;
+        }
+
+        .btn-cta-white {
+            background: white;
+            color: var(--accent-primary);
+            padding: 15px 36px;
+            border-radius: 12px;
+            font-weight: 700;
+            font-size: 1rem;
+            text-decoration: none;
+            display: inline-block;
+            transition: all 0.25s ease;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+        }
+
+        .btn-cta-white:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 32px rgba(0,0,0,0.25);
+            color: var(--accent-primary);
+        }
+
+        /* Footer */
+        .footer {
+            background: #0f172a;
+            color: rgba(255,255,255,0.5);
+            padding: 40px 24px;
+            text-align: center;
+            font-size: 0.88rem;
+        }
+
+        .footer .footer-logo {
+            font-size: 1.4rem;
+            font-weight: 800;
+            color: white;
+            display: block;
+            margin-bottom: 12px;
+            letter-spacing: -0.03em;
+        }
+
+        /* Navbar overrides */
+        .nav-logo-text {
+            font-size: 1.35rem;
+            font-weight: 800;
+            letter-spacing: -0.03em;
+            text-decoration: none;
+            background: linear-gradient(135deg, #4f46e5 0%, #8b5cf6 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* Responsive */
+        @media (max-width: 680px) {
+            .stats-inner {
+                grid-template-columns: 1fr;
+            }
+            .stat-item + .stat-item {
+                border-left: none;
+                border-top: 1px solid var(--border-color);
+            }
+            .hero h1 { font-size: 2.5rem; }
+            .courses-header { flex-direction: column; align-items: flex-start; }
+        }
+    </style>
 </head>
 <body>
 
-<!-- Navbar -->
+<!-- ── Navbar ───────────────────────────────────────────── -->
 <nav class="glass-nav">
-    <a href="/" class="logo gradient-text">TutorBook</a>
-    <div class="nav-links">
-        <!-- If logged in: show Go to Dashboard. If not: show Login / Sign Up -->
+    <a href="/" class="nav-logo-text" id="nav-logo">✦ TutorBook</a>
+
+    <div class="nav-links" style="display:flex; align-items:center; gap:8px;">
         <th:block th:if="${session.role != null}">
             <a th:href="${session.role == 'ADMIN' ? '/dashboard/admin' : (session.role == 'TUTOR' ? '/dashboard/tutor' : '/dashboard/student')}"
-               class="btn-premium">Go to Dashboard</a>
+               class="btn-premium" id="btn-dashboard">Go to Dashboard</a>
         </th:block>
         <th:block th:unless="${session.role != null}">
-            <a th:href="@{/login}" class="btn-glass">Login</a>
-            <a th:href="@{/register}" class="btn-premium">Sign Up</a>
+            <a th:href="@{/login}" class="btn-glass" id="btn-login">Login</a>
+            <a th:href="@{/register}" class="btn-premium" id="btn-signup">Get Started</a>
         </th:block>
     </div>
 </nav>
 
-<!-- Hero Section -->
-<section style="min-height: 85vh; display: flex; justify-content: center; align-items: center; text-align: center; padding: 20px;">
-    <div class="glass-card" style="max-width: 800px; padding: 60px;">
-        <h1 style="font-size: 3.5rem; margin-bottom: 24px;">Find the <span class="gradient-text">Best Tutors</span> Online</h1>
-        <p style="font-size: 1.2rem; margin-bottom: 40px; color: var(--text-muted);">
-            Book professional tutors easily, master new subjects, and elevate your learning experience with our state-of-the-art platform.
-        </p>
-        <a th:href="@{/register}" class="btn-premium" style="font-size: 1.1rem; padding: 16px 32px;">Start Learning Today</a>
+<!-- ── Hero ────────────────────────────────────────────── -->
+<section class="hero" id="hero">
+    <div class="blob blob-1"></div>
+    <div class="blob blob-2"></div>
+
+    <div class="hero-badge"><span>🎓</span> Sri Lanka's #1 Tutor Platform</div>
+
+    <h1>Learn Faster with<br><span class="gradient-text">Expert Tutors</span></h1>
+
+    <p>Connect with top-rated professionals, book personalized sessions, and unlock your full potential — all in one place.</p>
+
+    <div class="hero-actions">
+        <a th:href="@{/register}" class="btn-hero-primary" id="btn-hero-signup">Start Learning Free →</a>
+        <a href="#courses" class="btn-hero-secondary" id="btn-browse-courses">Browse Courses</a>
     </div>
 </section>
 
-<!-- Stats Section -->
-<section style="padding: 40px 20px; background-color: var(--bg-card); border-top: 1px solid var(--border-color); border-bottom: 1px solid var(--border-color);">
-    <div style="max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-around; flex-wrap: wrap; text-align: center;">
-        <div style="padding: 20px; min-width: 200px;">
-            <h2 class="gradient-text" style="font-size: 3.5rem; margin-bottom: 10px;" th:text="${tutorCount != null ? tutorCount : '0'}">0</h2>
-            <p style="font-size: 1.1rem; font-weight: 600; color: var(--text-main);">Expert Tutors</p>
+<!-- ── Stats ────────────────────────────────────────────── -->
+<div class="stats-bar" id="stats">
+    <div class="stats-inner">
+        <div class="stat-item">
+            <span class="stat-number" th:text="${tutorCount != null ? tutorCount : '0'}">0</span>
+            <span class="stat-label">Expert Tutors</span>
         </div>
-        <div style="padding: 20px; min-width: 200px;">
-            <h2 class="gradient-text" style="font-size: 3.5rem; margin-bottom: 10px;" th:text="${studentCount != null ? studentCount : '0'}">0</h2>
-            <p style="font-size: 1.1rem; font-weight: 600; color: var(--text-main);">Happy Students</p>
+        <div class="stat-item">
+            <span class="stat-number" th:text="${studentCount != null ? studentCount : '0'}">0</span>
+            <span class="stat-label">Happy Students</span>
         </div>
-        <div style="padding: 20px; min-width: 200px;">
-            <h2 class="gradient-text" style="font-size: 3.5rem; margin-bottom: 10px;" th:text="${courses != null ? #lists.size(courses) : '0'}">0</h2>
-            <p style="font-size: 1.1rem; font-weight: 600; color: var(--text-main);">Active Courses</p>
+        <div class="stat-item">
+            <span class="stat-number" th:text="${courses != null ? #lists.size(courses) : '0'}">0</span>
+            <span class="stat-label">Active Courses</span>
+        </div>
+    </div>
+</div>
+
+<!-- ── Why Choose Us ─────────────────────────────────────── -->
+<section class="section" id="features">
+    <div style="text-align:center;">
+        <span class="section-tag">Why TutorBook?</span>
+        <h2 class="section-title">Everything You Need to <span class="gradient-text">Succeed</span></h2>
+        <p class="section-subtitle">From personalized tutoring to flexible scheduling, we've built the perfect platform for learners of every level.</p>
+    </div>
+
+    <div class="features-grid">
+        <div class="feature-card" id="feature-personalized">
+            <div class="feature-icon">🎯</div>
+            <h3>Personalized Learning</h3>
+            <p>Every session is tailored to your unique learning style, pace, and goals — no generic lessons.</p>
+        </div>
+        <div class="feature-card" id="feature-expert">
+            <div class="feature-icon">💡</div>
+            <h3>Verified Expert Tutors</h3>
+            <p>Learn from highly qualified professionals with proven track records in their subject areas.</p>
+        </div>
+        <div class="feature-card" id="feature-schedule">
+            <div class="feature-icon">🕒</div>
+            <h3>Flexible Scheduling</h3>
+            <p>Book sessions that fit your lifestyle. Study on your own terms, available around the clock.</p>
+        </div>
+        <div class="feature-card" id="feature-affordable">
+            <div class="feature-icon">💰</div>
+            <h3>Affordable Pricing</h3>
+            <p>Quality education shouldn't break the bank. Find sessions that match any budget.</p>
+        </div>
+        <div class="feature-card" id="feature-progress">
+            <div class="feature-icon">📈</div>
+            <h3>Track Your Progress</h3>
+            <p>Monitor your enrolled courses and completed sessions with your personal student dashboard.</p>
+        </div>
+        <div class="feature-card" id="feature-community">
+            <div class="feature-icon">🌐</div>
+            <h3>Trusted Community</h3>
+            <p>Join thousands of students and tutors building connections and achieving learning milestones.</p>
         </div>
     </div>
 </section>
 
-<!-- Why Choose Us Section -->
-<section style="padding: 80px 20px; max-width: 1200px; margin: 0 auto;">
-    <h2 style="text-align: center; font-size: 2.5rem; margin-bottom: 50px;">Why <span class="gradient-text">Choose Us?</span></h2>
-    
-    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 40px;">
-        <div class="glass-card" style="text-align: center; padding: 40px 30px;">
-            <div style="font-size: 3rem; margin-bottom: 20px;">🎯</div>
-            <h3 style="font-size: 1.3rem; margin-bottom: 15px;">Personalized Learning</h3>
-            <p>Our tutors tailor their teaching methods to fit your unique learning style and pace.</p>
-        </div>
-        <div class="glass-card" style="text-align: center; padding: 40px 30px;">
-            <div style="font-size: 3rem; margin-bottom: 20px;">💡</div>
-            <h3 style="font-size: 1.3rem; margin-bottom: 15px;">Expert Tutors</h3>
-            <p>Learn from highly qualified professionals with years of experience in their respective fields.</p>
-        </div>
-        <div class="glass-card" style="text-align: center; padding: 40px 30px;">
-            <div style="font-size: 3rem; margin-bottom: 20px;">🕒</div>
-            <h3 style="font-size: 1.3rem; margin-bottom: 15px;">Flexible Scheduling</h3>
-            <p>Book sessions that fit perfectly into your busy lifestyle, available 24/7.</p>
-        </div>
-    </div>
-</section>
-
-<!-- Courses Section -->
-<section style="padding: 60px 20px; max-width: 1200px; margin: 0 auto;">
-    <h2 style="text-align: center; font-size: 2.5rem; margin-bottom: 40px;">Available <span class="gradient-text">Courses</span></h2>
-    
-    <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 30px;">
-        <div th:each="course : ${courses}" class="glass-card" style="padding: 30px; display: flex; flex-direction: column; justify-content: space-between;">
+<!-- ── Courses ────────────────────────────────────────────── -->
+<section class="courses-section" id="courses">
+    <div class="courses-inner">
+        <div class="courses-header">
             <div>
-                <h3 th:text="${course.title}" style="margin-bottom: 15px; font-size: 1.5rem;">Course Title</h3>
-                <p style="color: var(--text-muted); margin-bottom: 8px;">
-                    <strong style="color: var(--text-color);">Tutor:</strong> <span th:text="${course.tutorName ?: 'Unknown'}">Tutor Name</span>
-                </p>
-                <p style="color: var(--text-muted); margin-bottom: 8px;">
-                    <strong style="color: var(--text-color);">Fee:</strong> LKR <span th:text="${course.price}">0.00</span>
-                </p>
-                <p style="color: var(--text-muted); margin-bottom: 20px;">
-                    <strong style="color: var(--text-color);">Description:</strong> <span th:text="${course.description}">Description details</span>
-                </p>
+                <span class="section-tag">Explore</span>
+                <h2 class="section-title" style="text-align:left; margin-bottom:0;">Available <span class="gradient-text">Courses</span></h2>
             </div>
-            <a th:href="@{/login}" class="btn-glass" style="text-align: center;">Login to Enroll</a>
+            <a th:href="@{/login}" class="btn-glass" id="btn-view-all">View All Courses →</a>
+        </div>
+
+        <!-- Course Grid -->
+        <div class="courses-grid" th:if="${courses != null and !#lists.isEmpty(courses)}">
+            <div th:each="course : ${courses}" class="course-card">
+                <div class="course-color-bar"></div>
+                <div class="course-body">
+                    <h3 class="course-title" th:text="${course.title}">Course Title</h3>
+
+                    <div class="course-meta">
+                        <div class="course-meta-row">
+                            <span class="icon">👤</span>
+                            <span><strong>Tutor:</strong> <span th:text="${course.tutorName ?: 'Unknown'}">Tutor Name</span></span>
+                        </div>
+                    </div>
+
+                    <p class="course-desc" th:text="${course.description}">Course description goes here, giving students a clear idea of what they'll learn in this course.</p>
+
+                    <div class="course-footer">
+                        <div class="course-price">
+                            LKR <span th:text="${course.price}">0</span>
+                            <span>/ session</span>
+                        </div>
+                        <a th:href="@{/login}" class="btn-enroll" id="btn-enroll">Enroll Now</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Empty state -->
+        <div class="empty-state" th:if="${courses == null or #lists.isEmpty(courses)}">
+            <span class="empty-icon">📚</span>
+            <p>No courses available at the moment. Check back soon!</p>
         </div>
     </div>
-    
-    <div th:if="${#lists.isEmpty(courses)}" style="text-align: center; margin-top: 40px;">
-        <p class="glass-card" style="display: inline-block; padding: 20px 40px; color: var(--text-muted);">No courses available at the moment.</p>
-    </div>
 </section>
+
+<!-- ── CTA Banner ─────────────────────────────────────────── -->
+<section class="cta-banner" id="cta">
+    <h2>Ready to Start Your<br>Learning Journey?</h2>
+    <p>Join thousands of students already achieving their goals with TutorBook.</p>
+    <a th:href="@{/register}" class="btn-cta-white" id="btn-cta-register">Create a Free Account →</a>
+</section>
+
+<!-- ── Footer ─────────────────────────────────────────────── -->
+<footer class="footer" id="footer">
+    <span class="footer-logo">✦ TutorBook</span>
+    <p>© 2025 TutorBook. Empowering learners, one session at a time.</p>
+</footer>
 
 </body>
 </html>

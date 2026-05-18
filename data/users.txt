@@ -1,4 +1,4 @@
-U001,thosiya,Thosara Karunathilaka,thosarayethmal300@gmail.com,Ea1qqald204!,STUDENT
+U001,thosiya,Thosara Karunathilaka,thosarayethmal300@gmail.com,123,STUDENT
 U002,tyethmal,W.V.R.D.T.Y.Karunathilaka,thosarayethmal300@gmail.com,123,STUDENT
 U003,sliit,sliit malabe,it25102867@my.sliit.lk,123,ADMIN
 U004,it25102867,W.V.R.D.T.Y.Karunathilaka,it25102867@my.sliit.lk,123,STUDENT
